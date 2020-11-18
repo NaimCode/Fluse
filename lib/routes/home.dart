@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/routes/bottomNavigation.dart';
+import 'package:website_university/routes/discussion/discussion.dart';
+import 'package:website_university/routes/etablissements/etablissements.dart';
+import 'package:website_university/routes/notifications/notifications.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,11 +15,9 @@ class _HomeState extends State<Home> {
   //Index pour le navBar
   String selectItemNav = 'Home';
   //Variable pour 'responsive'
-  double _screenSize = Get.width;
+
   @override
   Widget build(BuildContext context) {
-     setState(() => _screenSize = Get.width);
-
     return Scaffold(
       appBar: AppBar(
         //elevation: 20.0,
@@ -24,26 +25,7 @@ class _HomeState extends State<Home> {
         title: navBar(),
       ),
       body: Container(
-        width: _screenSize,
-        child: Row(
-          children: [
-            Expanded(flex: 1,
-              child: Container(
-                color: Colors.red,
-              ),
-            ),
-            Expanded(flex: 2,
-              child: Container(
-                color: Colors.blue,
-              ),
-            ),
-            Expanded(flex: 1,
-              child: Container(
-                color: Colors.yellow,
-              ),
-            ),
-          ],
-        ),
+        child: bodyPC(),
 
         // child: Row(
         //   children: [
@@ -59,6 +41,31 @@ class _HomeState extends State<Home> {
         // ),
       ),
       bottomSheet: !context.isSmallTablet ? BottomNav() : Text(''),
+    );
+  }
+
+  Row bodyPC() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            child: Notifications(),
+          ),
+        ),
+        Expanded(
+          flex: 5,
+          child: Container(
+            child: Etablissements(),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Container(
+            child: Discussion(),
+          ),
+        ),
+      ],
     );
   }
   ///////NAV BAR///
