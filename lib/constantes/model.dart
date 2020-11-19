@@ -74,4 +74,4 @@ Message m2 = Message(
     message: 'Salut fhfhdn fdjfdfjfdjfdjf vhjdjfdfdjfjdb bmdjjdjfjdfjdf');
 
 List<Information> listInfo = [info, info, info, info];
-List listMessage = [m2, m, m2, m, m2];
+List<Message> listMessages = [m2, m, m2, m, m2];

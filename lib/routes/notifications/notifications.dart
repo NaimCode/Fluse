@@ -51,20 +51,23 @@ class _NotificationsState extends State<Notifications> {
                       children: [
                         userSection(index),
                         contentSection(index),
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            listNotifications[index].date,
-                            style:
-                                TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
-                          ),
-                        )
+                        dateSection(index)
                       ],
                     ),
                   ),
                 ),
               );
             }),
+      ),
+    );
+  }
+
+  Container dateSection(int index) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Text(
+        listNotifications[index].date,
+        style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
       ),
     );
   }
@@ -144,9 +147,9 @@ class _NotificationsState extends State<Notifications> {
                 listNotifications[index].user.nom,
                 style: TextStyle(
                     fontFamily: 'Poppins',
-                    color: Colors.black,
+                    color: Colors.purple,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18),
+                    fontSize: 16),
               ),
             ],
           ),
