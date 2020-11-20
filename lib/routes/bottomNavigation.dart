@@ -1,5 +1,10 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:website_university/constantes/couleur.dart';
+import 'package:get/get.dart';
+import 'package:website_university/routes/discussion.dart';
+import 'package:website_university/routes/notifications.dart';
 
 bottomNav() {
   return Container(
@@ -20,7 +25,9 @@ bottomNav() {
               ),
             ),
             child: FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(Notifications(true));
+              },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Icon(
@@ -49,7 +56,9 @@ bottomNav() {
               ),
             ),
             child: FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(Discussion(true));
+              },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Icon(

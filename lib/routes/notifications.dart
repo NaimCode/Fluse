@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
+import 'package:hover_effect/hover_effect.dart';
 
+// ignore: must_be_immutable
 class Notifications extends StatefulWidget {
+  bool isMobile;
+  Notifications(this.isMobile);
   @override
   _NotificationsState createState() => _NotificationsState();
 }
@@ -20,6 +24,9 @@ class _NotificationsState extends State<Notifications> {
   double elevationCard = 2.0;
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 810 && widget.isMobile == true) {
+      Navigator.pop(context);
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: backColor,
@@ -31,6 +38,17 @@ class _NotificationsState extends State<Notifications> {
         ),
         centerTitle: true,
         elevation: 0.0,
+        leading: widget.isMobile
+            ? IconButton(
+                icon: Icon(
+                  Icons.expand_more,
+                  size: 35,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
       ),
       body: Container(
         color: backColor,
@@ -44,7 +62,7 @@ class _NotificationsState extends State<Notifications> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  elevation: 8.0,
+                  elevation: 0.0,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -104,7 +122,9 @@ class _NotificationsState extends State<Notifications> {
             label: Text(
               'Afficher',
               style: TextStyle(
-                  fontFamily: 'Didac', color: Colors.white,),
+                fontFamily: 'Didac',
+                color: Colors.white,
+              ),
             ),
           )
         ],

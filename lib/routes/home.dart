@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
@@ -21,6 +22,7 @@ class _HomeState extends State<Home> {
   User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
   //Index pour le navBar
   String selectItemNav = 'Home';
+
   //Variable pour 'responsive'
   Widget selectBody(String body) {
     switch (body) {
@@ -56,6 +58,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         //elevation: 20.0,
+
         backgroundColor: Colors.white,
         title: (MediaQuery.of(context).size.width >= 810)
             ? navBarPC()
@@ -70,30 +73,85 @@ class _HomeState extends State<Home> {
                 : bottomNav(),
           ],
         ),
-
-        // child: Row(
-        //   children: [
-        //     Scaffold(
-        //       appBar: AppBar(),
-        //     )
-        //     //nav
-        //     //navBar(selectItemNav),
-        //     //body
-
-        //     //context.isSmallTablet ? BottomNav() : Container(),
-        //   ],
-        // ),
       ),
-      floatingActionButton: user.admin
-          ? Container(
-              margin: EdgeInsets.only(left: 30.0),
-              alignment: Alignment.bottomCenter,
-              child: FloatingActionButton(
-                onPressed: () {},
-                child: Icon(Icons.add, color: Colors.white),
+      endDrawer:
+          (MediaQuery.of(context).size.width <= 810) ? menuMobile() : null,
+      floatingActionButton: user.admin ? ajout() : null,
+    );
+  }
+
+  Container ajout() {
+    return Container(
+      margin: EdgeInsets.only(left: 30.0),
+      alignment: Alignment.bottomCenter,
+      child: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
+
+  Drawer menuMobile() {
+    return Drawer(
+      child: Container(
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
+              child: Column(
+                children: [
+                  Container(
+                    child: Image.asset(user.image),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    color: primary,
+                    child: Text(
+                      '${user.nom}',
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          color: Colors.white,
+                          fontSize: 20.0),
+                    ),
+                  ),
+                ],
               ),
-            )
-          : Container(),
+            ),
+            Expanded(
+              child: Center(
+                child: ListView.builder(
+                  itemCount: listMenu.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectItemNav = listMenu[index];
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Card(
+                        color: Colors.grey[900].withOpacity(0.0),
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          child: Center(
+                            child: (listMenu[index] != 'Home')
+                                ? Text(
+                                    listMenu[index],
+                                    style: TextStyle(
+                                        fontFamily: 'Ubuntu', fontSize: 20.0),
+                                  )
+                                : Icon(Icons.home, color: primary, size: 35.0),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -104,7 +162,7 @@ class _HomeState extends State<Home> {
             ? Expanded(
                 flex: 2,
                 child: Container(
-                  child: Notifications(),
+                  child: Notifications(false),
                 ),
               )
             : Container(
@@ -120,7 +178,7 @@ class _HomeState extends State<Home> {
             ? Expanded(
                 flex: 2,
                 child: Container(
-                  child: Discussion(),
+                  child: Discussion(false),
                 ),
               )
             : Container(height: 0.0),
@@ -166,10 +224,9 @@ class _HomeState extends State<Home> {
                     ),
                     height: double.infinity,
                     child: FlatButton(
+                      //Recharge la page
                       onPressed: () {
-                        setState(() {
-                          selectItemNav = 'Etablissements';
-                        });
+                        setState(() => selectItemNav = 'Etablissements');
                       },
                       child: Text(
                         'Etablissements',
@@ -288,13 +345,15 @@ class _HomeState extends State<Home> {
             child: Container(
               height: double.infinity,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.snackbar('Bonjour', user.nom);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(backgroundImage: AssetImage(user.image)),
                     SizedBox(
-                      width: 10,
+                      width: 10.0,
                     ),
                     (Get.width >= 1200)
                         ? Text(
@@ -356,29 +415,14 @@ class _HomeState extends State<Home> {
           //profile
           Expanded(
             flex: 1,
-            child: Container(
-              height: double.infinity,
-              child: Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage(user.image),
-                      ),
-                    ),
-                    Expanded(
-                      child: FlatButton(
-                        child: Icon(
-                          Icons.menu,
-                          size: 35,
-                        ),
-                        onPressed: () {},
-                      ),
-                    )
-                  ],
+            child: InkWell(
+              onTap: () {},
+              child: Container(
+                height: double.infinity,
+                child: Center(
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(user.image),
+                  ),
                 ),
               ),
             ),

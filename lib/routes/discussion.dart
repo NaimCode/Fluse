@@ -4,6 +4,8 @@ import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 
 class Discussion extends StatefulWidget {
+  bool isMobile;
+  Discussion(this.isMobile);
   @override
   _DiscussionState createState() => _DiscussionState();
 }
@@ -25,6 +27,9 @@ class _DiscussionState extends State<Discussion> {
   double heightChannel = 0.0;
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 810 && widget.isMobile == true) {
+      Navigator.pop(context);
+    }
     return Scaffold(
       backgroundColor: backColor,
       appBar: AppBar(
@@ -37,6 +42,17 @@ class _DiscussionState extends State<Discussion> {
         ),
         centerTitle: true,
         elevation: 0.0,
+        leading: widget.isMobile
+            ? IconButton(
+                icon: Icon(
+                  Icons.expand_more,
+                  size: 35,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
       ),
       body: Container(
           color: backColor,
@@ -54,9 +70,18 @@ class _DiscussionState extends State<Discussion> {
                       itemBuilder: (context, index) {
                         bool isUser = (listMessage[index].user.nom == user.nom);
 
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              top: 5.0, left: 10.0, right: 10.0),
+                        return Container(
+                          margin: EdgeInsets.only(
+                              left: isUser
+                                  ? widget.isMobile
+                                      ? 100.0
+                                      : 30
+                                  : 0.0,
+                              right: !isUser
+                                  ? widget.isMobile
+                                      ? 100.0
+                                      : 30
+                                  : 0.0),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
@@ -70,7 +95,7 @@ class _DiscussionState extends State<Discussion> {
                                     : Radius.circular(0.0),
                               ),
                             ),
-                            elevation: isUser ? 8.0 : 5.0,
+                            elevation: 0.0,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -103,7 +128,7 @@ class _DiscussionState extends State<Discussion> {
         });
       },
       child: Card(
-        elevation: 5.0,
+        elevation: 0.0,
         child: Column(
           children: [
             Container(
@@ -129,6 +154,8 @@ class _DiscussionState extends State<Discussion> {
                     if (listChannel[index] != channel)
                       return InkWell(
                         onTap: () {
+                          Get.snackbar('Changement de serveur',
+                              'Vous êtes actuellement sur le serveur de discussion \'${listChannel[index]}\'');
                           setState(() {
                             heightChannel = 0.0;
                             channel = listChannel[index];

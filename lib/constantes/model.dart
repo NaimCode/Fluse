@@ -1,6 +1,16 @@
 //model de l'information
 import 'package:website_university/constantes/string.dart';
 
+//// Menu
+List<String> listMenu = [
+  'Etablissements',
+  'Documents',
+  'Home',
+  'Support',
+  'Contact',
+];
+
+///////
 class Information {
   User user;
   String description;
