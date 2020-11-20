@@ -104,7 +104,7 @@ class _NotificationsState extends State<Notifications> {
             label: Text(
               'Afficher',
               style: TextStyle(
-                  fontFamily: 'Didac', color: Colors.white, letterSpacing: 2),
+                  fontFamily: 'Didac', color: Colors.white,),
             ),
           )
         ],

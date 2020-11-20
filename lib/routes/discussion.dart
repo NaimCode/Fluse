@@ -9,6 +9,8 @@ class Discussion extends StatefulWidget {
 }
 
 class _DiscussionState extends State<Discussion> {
+  String channel = 'Global';
+
   List<Message> listMessage;
   User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
   @override
@@ -17,6 +19,10 @@ class _DiscussionState extends State<Discussion> {
     super.initState();
   }
 
+//
+  List<String> listChannel = ['Global', 'SMAI', 'STU', 'SMPC', 'Droit'];
+//Animation
+  double heightChannel = 0.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +44,7 @@ class _DiscussionState extends State<Discussion> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                channelFunction(),
                 Expanded(
                   child: Container(
                     // height: Get.width - 500,
@@ -84,6 +91,68 @@ class _DiscussionState extends State<Discussion> {
               ],
             ),
           )),
+    );
+  }
+
+  FlatButton channelFunction() {
+    return FlatButton(
+      onPressed: () {
+        double check = heightChannel;
+        setState(() {
+          (check == 80) ? heightChannel = 0.0 : heightChannel = 80.0;
+        });
+      },
+      child: Card(
+        elevation: 5.0,
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(channel,
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu', fontSize: 18, color: primary)),
+                  Icon(Icons.expand_more),
+                ],
+              ),
+            ),
+            AnimatedContainer(
+              //width: double.infinity / 3,
+              height: heightChannel,
+              duration: Duration(seconds: 1),
+              curve: Curves.fastLinearToSlowEaseIn,
+              child: Container(
+                child: ListView.builder(
+                  itemCount: listChannel.length,
+                  itemBuilder: (context, index) {
+                    if (listChannel[index] != channel)
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            heightChannel = 0.0;
+                            channel = listChannel[index];
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              listChannel[index],
+                            ),
+                            Text(''),
+                          ],
+                        ),
+                      );
+                    else
+                      return Container();
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

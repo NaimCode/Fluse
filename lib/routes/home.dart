@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
+import 'package:website_university/constantes/model.dart';
 import 'package:website_university/routes/bottomNavigation.dart';
-import 'package:website_university/routes/discussion/discussion.dart';
-import 'package:website_university/routes/etablissements/etablissements.dart';
-import 'package:website_university/routes/notifications/notifications.dart';
+import 'package:website_university/routes/discussion.dart';
+import 'package:website_university/routes/pages/accueil.dart';
+import 'package:website_university/routes/pages/contact.dart';
+import 'package:website_university/routes/pages/documents.dart';
+import 'package:website_university/routes/pages/etablissements.dart';
+import 'package:website_university/routes/notifications.dart';
+import 'package:website_university/routes/pages/support.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,9 +17,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  /////User//////////
+  User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
   //Index pour le navBar
   String selectItemNav = 'Home';
   //Variable pour 'responsive'
+  Widget selectBody(String body) {
+    switch (body) {
+      case 'Home':
+        return Accueil();
+
+        break;
+      case 'Etablissements':
+        return Etablissements();
+
+        break;
+      case 'Contact':
+        return Contact();
+
+        break;
+      case 'Support':
+        return Support();
+
+        break;
+      case 'Documents':
+        return Documents();
+
+        break;
+      default:
+        return Center(
+          child: Text('Erreur'),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +57,19 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         //elevation: 20.0,
         backgroundColor: Colors.white,
-        title: navBar(),
+        title: (MediaQuery.of(context).size.width >= 810)
+            ? navBarPC()
+            : navBarMobile(),
       ),
       body: Container(
-        child: bodyPC(),
+        child: Column(
+          children: [
+            Expanded(child: Container(child: bodyPC())),
+            (MediaQuery.of(context).size.width >= 810)
+                ? Container()
+                : bottomNav(),
+          ],
+        ),
 
         // child: Row(
         //   children: [
@@ -40,37 +84,52 @@ class _HomeState extends State<Home> {
         //   ],
         // ),
       ),
-      bottomSheet: !context.isSmallTablet ? BottomNav() : Text(''),
+      floatingActionButton: user.admin
+          ? Container(
+              margin: EdgeInsets.only(left: 30.0),
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton(
+                onPressed: () {},
+                child: Icon(Icons.add, color: Colors.white),
+              ),
+            )
+          : Container(),
     );
   }
 
   Row bodyPC() {
     return Row(
       children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            child: Notifications(),
-          ),
-        ),
+        (MediaQuery.of(context).size.width >= 810)
+            ? Expanded(
+                flex: 2,
+                child: Container(
+                  child: Notifications(),
+                ),
+              )
+            : Container(
+                height: 0.0,
+              ),
         Expanded(
           flex: 5,
           child: Container(
-            child: Etablissements(),
+            child: selectBody(selectItemNav),
           ),
         ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            child: Discussion(),
-          ),
-        ),
+        (MediaQuery.of(context).size.width >= 810)
+            ? Expanded(
+                flex: 2,
+                child: Container(
+                  child: Discussion(),
+                ),
+              )
+            : Container(height: 0.0),
       ],
     );
   }
   ///////NAV BAR///
 
-  Widget navBar() {
+  Widget navBarPC() {
     return Container(
       height: 57.0,
       child: Row(
@@ -225,7 +284,7 @@ class _HomeState extends State<Home> {
           ),
           //profile
           Expanded(
-            flex: 1,
+            flex: (MediaQuery.of(context).size.width >= 1200) ? 1 : 0,
             child: Container(
               height: double.infinity,
               child: InkWell(
@@ -233,17 +292,92 @@ class _HomeState extends State<Home> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(backgroundImage: AssetImage('avatar.jpg')),
+                    CircleAvatar(backgroundImage: AssetImage(user.image)),
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      'Naim',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        color: Colors.indigo[900],
+                    (Get.width >= 1200)
+                        ? Text(
+                            user.nom,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.purple[900],
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget navBarMobile() {
+    return Container(
+      height: 57.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          //logo
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: Center(
+                child: Image.asset('logo.png'),
+              ),
+            ),
+          ),
+          Spacer(),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  //                    <--- top side
+                  color: Colors.black,
+
+                  width: 2.0,
+                ),
+              ),
+            ),
+            height: double.infinity,
+            child: Center(
+              child: (selectItemNav != 'Home')
+                  ? Text(
+                      selectItemNav,
+                      style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0),
+                    )
+                  : Icon(Icons.home, color: primary, size: 35.0),
+            ),
+          ),
+          Spacer(),
+          //profile
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: double.infinity,
+              child: Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(user.image),
                       ),
                     ),
+                    Expanded(
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.menu,
+                          size: 35,
+                        ),
+                        onPressed: () {},
+                      ),
+                    )
                   ],
                 ),
               ),

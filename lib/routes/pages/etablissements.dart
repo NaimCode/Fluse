@@ -11,7 +11,9 @@ class _EtablissementsState extends State<Etablissements> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        child: Center(
+          child: Text('Etablissement'),
+        ),
       ),
     );
   }
