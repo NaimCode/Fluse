@@ -72,7 +72,10 @@ flutter:
         - asset: fonts/Poppins-Thin.ttf
     - family: Didac
       fonts:
-        - asset: fonts/DidactGothic-Regular.ttf
+        - asset: fonts/DidactGothic-Regular.ttf'
+    - family: Tomorrow
+      fonts:
+        - asset: fonts/Tomorrow-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

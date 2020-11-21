@@ -92,6 +92,7 @@ class _HomeState extends State<Home> {
   }
 
   Drawer menuMobile() {
+    var elevation = 0.0;
     return Drawer(
       child: Container(
         child: Column(
@@ -122,25 +123,34 @@ class _HomeState extends State<Home> {
                 child: ListView.builder(
                   itemCount: listMenu.length,
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          selectItemNav = listMenu[index];
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Card(
-                        color: Colors.grey[900].withOpacity(0.0),
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: Center(
-                            child: (listMenu[index] != 'Home')
-                                ? Text(
-                                    listMenu[index],
-                                    style: TextStyle(
-                                        fontFamily: 'Ubuntu', fontSize: 20.0),
-                                  )
-                                : Icon(Icons.home, color: primary, size: 35.0),
+                    return Material(
+                      child: InkWell(
+                        // onHover: (hover) {
+                        //   setState(() {
+                        //     hover ? elevation = 20 : elevation = 0.0;
+                        //   });
+                        // },
+                        onTap: () {
+                          setState(() {
+                            selectItemNav = listMenu[index];
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Card(
+                          elevation: elevation,
+                          color: Colors.grey[900].withOpacity(0.0),
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Center(
+                              child: (listMenu[index] != 'Home')
+                                  ? Text(
+                                      listMenu[index],
+                                      style: TextStyle(
+                                          fontFamily: 'Ubuntu', fontSize: 20.0),
+                                    )
+                                  : Icon(Icons.home,
+                                      color: primary, size: 35.0),
+                            ),
                           ),
                         ),
                       ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:hover_effect/hover_effect.dart';
+import 'package:website_university/extension/hover.extension.dart';
 
 // ignore: must_be_immutable
 class Notifications extends StatefulWidget {
