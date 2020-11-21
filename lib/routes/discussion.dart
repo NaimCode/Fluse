@@ -35,10 +35,13 @@ class _DiscussionState extends State<Discussion> {
       appBar: AppBar(
         backgroundColor: backColor,
         //check
-        title: Icon(
-          Icons.comment,
-          size: 35,
-          color: primary,
+        title: Tooltip(
+          message: 'Discussions',
+          child: Icon(
+            Icons.comment,
+            size: 35,
+            color: primary,
+          ),
         ),
         centerTitle: true,
         elevation: 0.0,
@@ -259,10 +262,13 @@ class _DiscussionState extends State<Discussion> {
             ],
           ),
           listMessage[index].user.admin
-              ? Icon(
-                  Icons.star_purple500_outlined,
-                  color: Colors.amber,
-                  size: 20,
+              ? Tooltip(
+                  message: 'Administrateur',
+                  child: Icon(
+                    Icons.star_purple500_outlined,
+                    color: Colors.amber,
+                    size: 20,
+                  ),
                 )
               : IconButton(
                   icon: Icon(Icons.more_horiz),

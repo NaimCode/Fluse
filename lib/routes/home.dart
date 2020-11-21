@@ -17,13 +17,18 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  Animation animation;
+  AnimationController animationController;
+  bool addClose = true;
+  double add = 0.0;
   /////User//////////
   User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
   //Index pour le navBar
   String selectItemNav = 'Home';
 
   //Variable pour 'responsive'
+
   Widget selectBody(String body) {
     switch (body) {
       case 'Home':
@@ -51,6 +56,14 @@ class _HomeState extends State<Home> {
           child: Text('Erreur'),
         );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    animation = Tween<double>(begin: 0, end: 1).animate(animationController);
   }
 
   @override
@@ -84,9 +97,75 @@ class _HomeState extends State<Home> {
     return Container(
       margin: EdgeInsets.only(left: 30.0),
       alignment: Alignment.bottomCenter,
-      child: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add, color: Colors.white),
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: (Get.width <= 359)
+                  ? EdgeInsets.only(left: 0.0)
+                  : EdgeInsets.only(left: 18.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInToLinear,
+                      height: add,
+                      child: RaisedButton.icon(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        color: primary,
+                        icon: Icon(Icons.article, color: Colors.white),
+                        label: Text(
+                          'Document',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {},
+                      )),
+                  SizedBox(
+                    width: (Get.width <= 362) ? 0.0 : 30,
+                  ),
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInToLinear,
+                      height: add,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: RaisedButton.icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          color: primary,
+                          icon: Icon(Icons.school, color: Colors.white),
+                          label: Text(
+                            'Etablissement',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {},
+                        ),
+                      )),
+                ],
+              ),
+            ),
+            Tooltip(message: 'Ajouter un document ou un établissement',
+                          child: FloatingActionButton(
+                onPressed: () {
+                  addClose = !addClose;
+                  setState(() {
+                    (add == 0.0) ? add = 30.0 : add = 0.0;
+                  });
+                },
+                child: Icon(
+                  (add == 0.0) ? Icons.add : Icons.close,
+                  size: 35,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -442,17 +521,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-//  bottomNavigationBar: BottomNavigationBar(
-//         items: [
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.notifications,color: primary),
-//             label: 'Notifications',
-//           ),
-
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.comment,color: primary),
-//             label: 'Discussions',
-//           ),
-//         ],
-//       ),

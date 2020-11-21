@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:hover_effect/hover_effect.dart';
-import 'package:website_university/extension/hover.extension.dart';
 
 // ignore: must_be_immutable
 class Notifications extends StatefulWidget {
@@ -32,10 +31,13 @@ class _NotificationsState extends State<Notifications> {
       appBar: AppBar(
         backgroundColor: backColor,
         //check
-        title: Icon(
-          Icons.notifications,
-          size: 35,
-          color: primary,
+        title: Tooltip(
+          message: 'Notificatios',
+          child: Icon(
+            Icons.notifications,
+            size: 35,
+            color: primary,
+          ),
         ),
         centerTitle: true,
         elevation: 0.0,
@@ -113,7 +115,10 @@ class _NotificationsState extends State<Notifications> {
           SizedBox(
             height: 10.0,
           ),
-          FlatButton.icon(
+          RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
             color: primary,
             onPressed: () {},
             icon: Icon(
@@ -174,10 +179,13 @@ class _NotificationsState extends State<Notifications> {
               ),
             ],
           ),
-          Icon(
-            Icons.star_purple500_outlined,
-            color: Colors.amber,
-            size: 20,
+          Tooltip(
+            message: 'Administrateur',
+            child: Icon(
+              Icons.star_purple500_outlined,
+              color: Colors.amber,
+              size: 20,
+            ),
           )
         ],
       ),

@@ -16,6 +16,7 @@ class Information {
   String description;
   Document document;
   String date;
+
   Information({this.user, this.description, this.document, this.date});
 }
 

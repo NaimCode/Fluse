@@ -467,7 +467,7 @@ class _SplashState extends State<Splash> {
                         color: (selectItemNav == 's\'enregistrer')
                             ? Colors.black
                             : Colors.white,
-                        width: 2.0,
+                        width: 1.0,
                       ),
                     ),
                   ),
@@ -475,7 +475,7 @@ class _SplashState extends State<Splash> {
                   child: Text(
                     'S\'enregistrer',
                     style: TextStyle(
-                        fontFamily: 'Ubuntu', fontSize: 20, color: primary),
+                        fontFamily: 'Tomorrow', fontSize: 20, color: primary),
                   ),
                 ),
               ),
@@ -496,7 +496,7 @@ class _SplashState extends State<Splash> {
                         color: (selectItemNav == 'se connecter')
                             ? Colors.black
                             : Colors.white,
-                        width: 2.0,
+                        width: 1.0,
                       ),
                     ),
                   ),
@@ -504,7 +504,7 @@ class _SplashState extends State<Splash> {
                   child: Text(
                     'Se connecter',
                     style: TextStyle(
-                        fontFamily: 'Ubuntu', fontSize: 20, color: primary),
+                        fontFamily: 'Tomorrow', fontSize: 20, color: primary),
                   ),
                 ),
               ),
