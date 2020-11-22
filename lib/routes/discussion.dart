@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 
+// ignore: must_be_immutable
 class Discussion extends StatefulWidget {
   bool isMobile;
   Discussion(this.isMobile);

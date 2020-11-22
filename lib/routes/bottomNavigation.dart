@@ -8,6 +8,7 @@ import 'package:website_university/routes/notifications.dart';
 
 bottomNav() {
   return Container(
+    color: Colors.white,
     alignment: Alignment.bottomCenter,
     child: Row(
       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,

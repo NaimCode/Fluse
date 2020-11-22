@@ -58,6 +58,16 @@ class Document {
 }
 
 //////////////////////
+class Etablissement {
+  String nom;
+  String ville;
+  String image;
+  String description;
+  Etablissement({this.nom, this.ville, this.image, this.description});
+}
+
+Etablissement e =
+    Etablissement(nom: 'Ibn Tofail', ville: 'Kenitra', image: 'ibntofail.jpg');
 ///////////////////
 Document d = Document(
   annee: '2020-2021',
@@ -86,3 +96,11 @@ Message m2 = Message(
 
 List<Information> listInfo = [info, info, info, info];
 List<Message> listMessages = [m2, m, m2, m, m2];
+
+Etablissement eta = Etablissement(
+    nom: 'University Ibn Tofail',
+    ville: 'Kenitra',
+    image: 'ibntofail.jpg',
+    description:
+        'L\'université Ibn Tofaïl est une université publique marocaine située à Kénitra. Elle est classée 94ᵉ dans le classement régional 2016 des universités arabes.gfgf ggfgfgfg gfg f gf gfgfgfgfgf gfgf gfg fgfgfg  rtrtrt trttrtrt rtrt');
+List<Etablissement> listEtablissement = [eta, eta, eta, eta, eta];

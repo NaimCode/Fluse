@@ -25,7 +25,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   /////User//////////
   User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
   //Index pour le navBar
-  String selectItemNav = 'Home';
+  String selectItemNav = 'Etablissements';
 
   //Variable pour 'responsive'
 
