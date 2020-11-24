@@ -149,8 +149,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ],
               ),
             ),
-            Tooltip(message: 'Ajouter un document ou un établissement',
-                          child: FloatingActionButton(
+            Tooltip(
+              message: 'Ajouter un document ou un établissement',
+              child: FloatingActionButton(
                 onPressed: () {
                   addClose = !addClose;
                   setState(() {
@@ -181,7 +182,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               child: Column(
                 children: [
                   Container(
-                    child: Image.asset(user.image),
+                    child: Image.network(user.image),
                   ),
                   Container(
                     width: double.infinity,
@@ -287,7 +288,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             flex: 1,
             child: Container(
               child: Center(
-                child: Image.asset('logo.png'),
+                child: Image.network('logo.png'),
               ),
             ),
           ),
@@ -440,7 +441,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(backgroundImage: AssetImage(user.image)),
+                    CircleAvatar(backgroundImage: NetworkImage(user.image)),
                     SizedBox(
                       width: 10.0,
                     ),
@@ -474,7 +475,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             flex: 1,
             child: Container(
               child: Center(
-                child: Image.asset('logo.png'),
+                child: Image.network('assets/logo.png'),
               ),
             ),
           ),

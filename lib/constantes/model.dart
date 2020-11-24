@@ -63,7 +63,9 @@ class Etablissement {
   String ville;
   String image;
   String description;
-  Etablissement({this.nom, this.ville, this.image, this.description});
+  String lien;
+  Etablissement(
+      {this.nom, this.ville, this.image, this.description, this.lien});
 }
 
 Etablissement e =
@@ -79,8 +81,9 @@ Document d = Document(
   description:
       'C\'est le deuxième chapitre concernant les essentiels de Flutter',
 );
-User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
-User user2 = User(nom: 'Ali', admin: false, image: 'avatar2.jpg');
+User user =
+    User(nom: 'Naim Abdelkerim', admin: true, image: 'assets/avatar.jpg');
+User user2 = User(nom: 'Ali', admin: false, image: 'assets/avatar2.jpg');
 Information info = Information(
     user: user,
     document: d,

@@ -246,7 +246,7 @@ class _DiscussionState extends State<Discussion> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(listMessage[index].user.image),
+                  backgroundImage: NetworkImage(listMessage[index].user.image),
                 ),
               ),
               SizedBox(

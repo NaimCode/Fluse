@@ -32,7 +32,7 @@ class _NotificationsState extends State<Notifications> {
         backgroundColor: backColor,
         //check
         title: Tooltip(
-          message: 'Notificatios',
+          message: 'Notifications',
           child: Icon(
             Icons.notifications,
             size: 35,
@@ -163,7 +163,7 @@ class _NotificationsState extends State<Notifications> {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: CircleAvatar(
                   backgroundImage:
-                      AssetImage(listNotifications[index].user.image),
+                      NetworkImage(listNotifications[index].user.image),
                 ),
               ),
               SizedBox(

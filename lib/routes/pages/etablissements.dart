@@ -32,14 +32,58 @@ class _EtablissementsState extends State<Etablissements> {
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount:
                 ((Get.width <= 1000 && Get.width > 810) || (Get.width < 600))
-                    ? 1
-                    : 2),
+                    ? 2
+                    : 3),
         itemBuilder: (context, index) {
           return Tooltip(
             message: 'Afficher plus de détail',
             child: InkWell(
               hoverColor: primary,
-              onTap: () {},
+              onTap: () {
+                Get.snackbar('${list[index].nom}', '${list[index].ville}');
+                // Get.defaultDialog(
+                //   backgroundColor: Colors.white,
+                //   content: Column(
+                //     children: [
+                //       Expanded(
+                //         child: Image.asset(
+                //           listEtablissement[index].image,
+                //           fit: BoxFit.cover,
+                //         ),
+                //       ),
+                //       Expanded(
+                //         child: Container(
+                //           child: Column(
+                //             children: [
+                //               Text(
+                //                 listEtablissement[index].nom,
+                //                 style: TextStyle(
+                //                     fontFamily: 'Didac',
+                //                     fontSize: 24,
+                //                     fontWeight: FontWeight.bold),
+                //               ),
+                //               Text(
+                //                 listEtablissement[index].ville,
+                //                 style: TextStyle(
+                //                   fontFamily: 'Didac',
+                //                   fontSize: 18,
+                //                 ),
+                //               ),
+                //               Text(
+                //                 listEtablissement[index].description,
+                //                 style: TextStyle(
+                //                   fontFamily: 'Didac',
+                //                   fontSize: 14,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // );
+              },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
@@ -52,14 +96,16 @@ class _EtablissementsState extends State<Etablissements> {
                     children: [
                       Expanded(
                         child: Container(
+                          height: 100,
+                          width: double.infinity,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Image.asset(
+                            child: Image.network(
                               list[index].image,
-                              width: ((Get.width <= 1000 && Get.width > 810) ||
-                                      (Get.width < 600))
-                                  ? 600
-                                  : 400.0,
+                              // height: ((Get.width <= 1000 && Get.width > 810) ||
+                              //         (Get.width < 600))
+                              //     ? 200
+                              //     : 50.0,
                               fit: BoxFit.cover,
                             ),
                           ),
