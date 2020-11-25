@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:website_university/constantes/couleur.dart';
+import 'package:website_university/routes/home.dart';
+import 'package:get/get.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -251,7 +253,9 @@ class _SplashState extends State<Splash> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       color: primary,
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.off(Home());
+                      },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 3.0, horizontal: 30.0),

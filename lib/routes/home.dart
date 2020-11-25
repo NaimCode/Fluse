@@ -441,7 +441,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(backgroundImage: NetworkImage(user.image)),
+                    CircleAvatar(backgroundImage: AssetImage(user.image)),
                     SizedBox(
                       width: 10.0,
                     ),

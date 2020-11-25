@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 
@@ -9,7 +10,7 @@ class Etablissements extends StatefulWidget {
 }
 
 class _EtablissementsState extends State<Etablissements> {
-  List<Etablissement> list;
+  List<Etablissement> list = [];
   @override
   void initState() {
     list = listEtablissement;
@@ -17,6 +18,11 @@ class _EtablissementsState extends State<Etablissements> {
     super.initState();
   }
 
+  dispose() {
+    super.dispose();
+  }
+
+  TextEditingController rechercheEtablissement = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,15 +38,16 @@ class _EtablissementsState extends State<Etablissements> {
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount:
                 ((Get.width <= 1000 && Get.width > 810) || (Get.width < 600))
-                    ? 2
-                    : 3),
+                    ? 1
+                    : 2),
         itemBuilder: (context, index) {
           return Tooltip(
             message: 'Afficher plus de détail',
             child: InkWell(
               hoverColor: primary,
               onTap: () {
-                Get.snackbar('${list[index].nom}', '${list[index].ville}');
+                Get.snackbar('${list[index].nom}',
+                    '${list[index].ville}-${list[index].description}');
                 // Get.defaultDialog(
                 //   backgroundColor: Colors.white,
                 //   content: Column(
@@ -168,6 +175,7 @@ class _EtablissementsState extends State<Etablissements> {
             children: [
               Expanded(
                   child: TextFormField(
+                controller: rechercheEtablissement,
                 decoration: new InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,

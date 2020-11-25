@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:hover_effect/hover_effect.dart';
+import 'package:website_university/routes/home.dart';
 
 // ignore: must_be_immutable
 class Notifications extends StatefulWidget {
@@ -21,7 +22,6 @@ class _NotificationsState extends State<Notifications> {
     super.initState();
   }
 
-  double elevationCard = 2.0;
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).size.width > 810 && widget.isMobile == true) {
@@ -29,7 +29,7 @@ class _NotificationsState extends State<Notifications> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: backColor,
+        backgroundColor: (Get.width <= 810) ? Colors.white : backColor,
         //check
         title: Tooltip(
           message: 'Notifications',
@@ -40,7 +40,7 @@ class _NotificationsState extends State<Notifications> {
           ),
         ),
         centerTitle: true,
-        elevation: 0.0,
+        elevation: (Get.width >= 810) ? 0.0 : 10.0,
         leading: widget.isMobile
             ? IconButton(
                 icon: Icon(
@@ -59,13 +59,12 @@ class _NotificationsState extends State<Notifications> {
             itemCount: listNotifications.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  elevation: 0.0,
+                  elevation: 10.0,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -186,7 +185,7 @@ class _NotificationsState extends State<Notifications> {
               color: Colors.amber,
               size: 20,
             ),
-          )
+          ),
         ],
       ),
     );

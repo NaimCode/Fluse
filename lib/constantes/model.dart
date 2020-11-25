@@ -88,8 +88,12 @@ Information info = Information(
     user: user,
     document: d,
     date: '14h:03 | 12-04-2020',
-    description:
-        'Nouveau fiche de cours hggggggghghg gkgfkkgf dddddddfff ggggggggggfgfgf');
+    description: 'Nouveau fiche de cours');
+Information info2 = Information(
+    user: user,
+    document: d,
+    date: '16h:03 | 17-04-2020',
+    description: 'Support du cours');
 Message m = Message(
     user: user, date: '04h:50 09/12/2020', message: 'Coucou tout le monde');
 Message m2 = Message(
@@ -97,13 +101,25 @@ Message m2 = Message(
     date: '07h:50 19/12/2020',
     message: 'Salut fhfhdn fdjfdfjfdjfdjf vhjdjfdfdjfjdb bmdjjdjfjdfjdf');
 
-List<Information> listInfo = [info, info, info, info];
-List<Message> listMessages = [m2, m, m2, m, m2];
+List<Information> listInfo = [
+  info,
+  info2,
+  info,
+  info2,
+  info2,
+  info,
+  info2,
+  info
+];
+List<Message> listMessages = [
+  m2,
+  m,
+];
 
 Etablissement eta = Etablissement(
     nom: 'University Ibn Tofail',
     ville: 'Kenitra',
-    image: 'ibntofail.jpg',
+    image: 'assets/ibntofail.jpg',
     description:
         'L\'université Ibn Tofaïl est une université publique marocaine située à Kénitra. Elle est classée 94ᵉ dans le classement régional 2016 des universités arabes.gfgf ggfgfgfg gfg f gf gfgfgfgfgf gfgf gfg fgfgfg  rtrtrt trttrtrt rtrt');
 List<Etablissement> listEtablissement = [eta, eta, eta, eta, eta];

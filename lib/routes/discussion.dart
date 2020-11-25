@@ -22,8 +22,17 @@ class _DiscussionState extends State<Discussion> {
     super.initState();
   }
 
+  TextEditingController messageText = TextEditingController();
 //
-  List<String> listChannel = ['Global', 'SMAI', 'STU', 'SMPC', 'Droit'];
+  List<String> listChannel = [
+    'Global',
+    'SMAI',
+    'STU',
+    'SMPC',
+    'Droit',
+    'Ali',
+    'Economie'
+  ];
 //Animation
   double heightChannel = 0.0;
   @override
@@ -150,7 +159,7 @@ class _DiscussionState extends State<Discussion> {
               //width: double.infinity / 3,
               height: heightChannel,
               duration: Duration(seconds: 1),
-              curve: Curves.fastLinearToSlowEaseIn,
+              curve: Curves.linearToEaseOut,
               child: Container(
                 child: ListView.builder(
                   itemCount: listChannel.length,
@@ -198,13 +207,24 @@ class _DiscussionState extends State<Discussion> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: TextField(
+                  controller: messageText,
                   decoration: InputDecoration(),
                 ),
               ),
             ),
             IconButton(
+              tooltip: 'Envoyer',
               icon: Icon(Icons.send),
-              onPressed: () {},
+              onPressed: () {
+                Message m = Message(
+                  user: user,
+                  message: messageText.text,
+                  date: '06h:09 | 12-5-22',
+                );
+                setState(() {
+                  listMessage.add(m);
+                });
+              },
             )
           ],
         ),
