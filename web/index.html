@@ -40,6 +40,32 @@
       });
     }
   </script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyB_rsTWpHIz0wB9syL4Wdr_2YUN3wgVocI",
+    authDomain: "fluse-officiel.firebaseapp.com",
+    databaseURL: "https://fluse-officiel.firebaseio.com",
+    projectId: "fluse-officiel",
+    storageBucket: "fluse-officiel.appspot.com",
+    messagingSenderId: "494426003259",
+    appId: "1:494426003259:web:a1052c0836b6dca853491e",
+    measurementId: "G-4JB0JFBHVT"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
   <script src="main.dart.js" type="application/javascript"></script>
+  
 </body>
 </html>
