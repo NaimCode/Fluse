@@ -7,15 +7,15 @@ import 'package:website_university/services/variableStatic.dart';
 
 getLogo() async {
   var ref = FirebaseStorage.instance.ref().child("Assets/logo.png");
-  String url = (await ref.getDownloadURL()).toString();
-
+  String url = (await ref.getDownloadURL());
+  print(url);
   return url;
 }
 
 getAvatar1() async {
   var ref = FirebaseStorage.instance.ref().child("Assets/avatar.jpg");
   String url = (await ref.getDownloadURL()).toString();
-
+print(url);
   return url;
 }
 

@@ -50,7 +50,7 @@ class _FluseWebsiteState extends State<FluseWebsite> {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();
         return Scaffold(
-          body: Home(),
+          body: AjoutEtablissement(),
         );
       },
     );

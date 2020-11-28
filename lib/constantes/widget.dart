@@ -12,3 +12,29 @@ Scaffold chargement() {
     ),
   );
 }
+
+final snackBarEtablissment = SnackBar(
+    content: Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'L\'établissement été ajouté',
+      style: TextStyle(fontSize: 20.0, color: Colors.white),
+    ),
+    Icon(Icons.verified, color: Colors.white)
+  ],
+));
+final snackBarEtablissementEchec = SnackBar(
+    content: Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'Erreur, verifiez que vous avez saisi tous les champs!',
+      style: TextStyle(fontSize: 20.0, color: Colors.red),
+    ),
+    Icon(
+      Icons.error,
+      color: Colors.red,
+    )
+  ],
+));

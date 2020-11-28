@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:website_university/constantes/couleur.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:path/path.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase/firebase.dart' as fb;
-import 'package:website_university/constantes/widget.dart';
+import 'dart:typed_data';
 
-import '../../main.dart';
+import 'package:flutter/material.dart';
+
+import 'package:website_university/constantes/couleur.dart';
+
+import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:website_university/constantes/widget.dart';
 
 class AjoutEtablissement extends StatefulWidget {
   @override
@@ -20,33 +18,85 @@ class AjoutEtablissement extends StatefulWidget {
 class _AjoutEtablissementState extends State<AjoutEtablissement> {
   //initialisation
   final firestoreinstance = FirebaseFirestore.instance;
+
   //fb.StorageReference _ref = fb.storage().re;
 
   //Controller
   TextEditingController nomController = TextEditingController();
   TextEditingController villeController = TextEditingController();
   TextEditingController descController = TextEditingController();
+  TextEditingController lienController = TextEditingController();
   ////Bool
   bool isCharging = false;
+  bool emptyField = false;
+  bool selected = false;
 
   ///diverses variables
-  File imageFile;
-  String imagePath;
+  Uint8List image;
+  String imageUrl;
 
   ///choisir une image
-  Future choisirImageEtablissement() async {
-    FilePickerResult pick =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+  choisirImageEtablissement() async {
+    InputElement uploadImage = FileUploadInputElement()..accept = 'image/*';
+    uploadImage.click();
+    uploadImage.onChange.listen((event) async {
+      final file = uploadImage.files.first;
+      final reader = FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onLoad.listen((event) {
+        setState(() {
+          image = reader.result;
+        });
+      });
+    });
+  }
 
-    if (pick != null) {
-      print('pick not null');
-      imageFile = File(pick.files.single.path);
+  uploadEtablissement() async {
+    if (nomController.text != '' &&
+        villeController.text != '' &&
+        descController.text != '' &&
+        lienController.text != '' &&
+        image != null) {
+      setState(() {
+        isCharging = true;
+        emptyField = false;
+      });
+      var ref = FirebaseStorage.instance
+          .ref()
+          .child('Etablissement/${nomController.text}');
 
-      print('setStat passe');
+      UploadTask uploadTask = ref.putData(image);
+      await uploadTask.whenComplete(() async {
+        imageUrl = await ref.getDownloadURL();
+        print(imageUrl);
+      });
+
+      var etablissement = {
+        'nom': nomController.text,
+        'ville': villeController.text,
+        'description': descController.text,
+        'lien': lienController.text,
+        'image': imageUrl,
+      };
+
+      firestoreinstance.collection('Etablissement').doc().set(etablissement);
+      setState(() {
+        nomController.clear();
+        villeController.clear();
+        descController.clear();
+        image = null;
+        selected = false;
+        isCharging = false;
+      });
+      return true;
+    } else {
+      setState(() {
+        emptyField = true;
+      });
+      return false;
     }
   }
 
-  String image;
   @override
   Widget build(BuildContext context) {
     return isCharging
@@ -85,13 +135,24 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
                       SizedBox(
                         height: 10,
                       ),
+                      lienTextField(),
+                      SizedBox(
+                        height: 10,
+                      ),
                       descTextField(),
                       SizedBox(
                         height: 10,
                       ),
                       FloatingActionButton(
                         tooltip: 'Ajouter',
-                        onPressed: () {},
+                        onPressed: () async {
+                          var check = await uploadEtablissement();
+                          check
+                              ? Scaffold.of(context)
+                                  .showSnackBar(snackBarEtablissment)
+                              : Scaffold.of(context)
+                                  .showSnackBar(snackBarEtablissementEchec);
+                        },
                         child: Icon(
                           Icons.add,
                           color: Colors.white,
@@ -111,20 +172,26 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
       child: InkWell(
         onTap: () {
           choisirImageEtablissement();
+          setState(() {
+            selected = true;
+          });
         },
         child: Card(
           color: backColor,
           elevation: 6,
           child: Container(
-              color: backColor,
-              height: 300,
-              width: 500,
-              child: (imageFile == null)
-                  ? Icon(
-                      Icons.add_a_photo,
-                      color: Colors.black45,
-                    )
-                  : Image.asset('avatar.jpg', fit: BoxFit.cover)),
+            color: backColor,
+            height: 300,
+            width: 500,
+            child: !selected
+                ? Icon(
+                    Icons.add_a_photo,
+                    color: Colors.black45,
+                  )
+                : (image != null)
+                    ? Image.memory(image, fit: BoxFit.contain)
+                    : chargement(),
+          ),
         ),
       ),
     );
@@ -145,8 +212,9 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
       child: Stack(
         children: [
           TextFormField(
+            controller: descController,
             keyboardType: TextInputType.multiline,
-            maxLines: 5,
+            maxLines: 4,
             decoration: new InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -176,6 +244,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
       child: Stack(
         children: [
           TextFormField(
+            controller: villeController,
             decoration: new InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -185,6 +254,36 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
                 contentPadding:
                     EdgeInsets.only(left: 15, bottom: 16, top: 11, right: 15),
                 hintText: 'Nom de la ville...'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container lienTextField() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          //                    <--- top side
+          color: backColor,
+          width: 3.0,
+        ),
+      ),
+      width: 500,
+      child: Stack(
+        children: [
+          TextFormField(
+            controller: lienController,
+            decoration: new InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                contentPadding:
+                    EdgeInsets.only(left: 15, bottom: 16, top: 11, right: 15),
+                hintText: 'Lien...'),
           ),
         ],
       ),
@@ -205,6 +304,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
       child: Stack(
         children: [
           TextFormField(
+            controller: nomController,
             decoration: new InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
