@@ -1,5 +1,16 @@
 //model de l'information
 import 'package:website_university/constantes/string.dart';
+import 'package:website_university/services/variableStatic.dart';
+
+import '../main.dart';
+
+//App
+class Assets {
+  String logo;
+  String avatar1;
+  String avatar2;
+  Assets({this.logo, this.avatar1, this.avatar2});
+}
 
 //// Menu
 List<String> listMenu = [
@@ -81,9 +92,16 @@ Document d = Document(
   description:
       'C\'est le deuxième chapitre concernant les essentiels de Flutter',
 );
-User user =
-    User(nom: 'Naim Abdelkerim', admin: true, image: 'assets/avatar.jpg');
-User user2 = User(nom: 'Ali', admin: false, image: 'assets/avatar2.jpg');
+User user = User(
+  nom: 'Naim Abdelkerim',
+  admin: true,
+  image: avatar,
+);
+User user2 = User(
+  nom: 'Ali',
+  admin: false,
+  image: avatar2,
+);
 Information info = Information(
     user: user,
     document: d,

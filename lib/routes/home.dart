@@ -3,6 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
+import 'package:website_university/constantes/widget.dart';
+import 'package:website_university/main.dart';
 import 'package:website_university/routes/bottomNavigation.dart';
 import 'package:website_university/routes/discussion.dart';
 import 'package:website_university/routes/pages/accueil.dart';
@@ -12,18 +14,26 @@ import 'package:website_university/routes/pages/etablissements.dart';
 import 'package:website_university/routes/notifications.dart';
 import 'package:website_university/routes/pages/support.dart';
 
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:website_university/services/firestorage.dart';
+import 'package:website_university/services/variableStatic.dart';
+
+//import '../main.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  ////Fluse
+
   Animation animation;
   AnimationController animationController;
   bool addClose = true;
   double add = 0.0;
   /////User//////////
-  User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
+  User user = User(nom: 'Naim Abdelkerim', admin: true, image: avatar);
   //Index pour le navBar
   String selectItemNav = 'Etablissements';
 
@@ -61,6 +71,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
     animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     animation = Tween<double>(begin: 0, end: 1).animate(animationController);
@@ -172,17 +183,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Drawer menuMobile() {
-    var elevation = 0.0;
     return Drawer(
       child: Container(
         child: Column(
           children: [
             Container(
+              height: 300,
               margin: EdgeInsets.only(bottom: 20.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    child: Image.network(user.image),
+                  Expanded(
+                    child: Container(
+                      child: Image.network(user.image,fit: BoxFit.cover,),
+                    ),
                   ),
                   Container(
                     width: double.infinity,
@@ -217,7 +231,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           Navigator.pop(context);
                         },
                         child: Card(
-                          elevation: elevation,
+                          elevation: 0.0,
                           color: Colors.grey[900].withOpacity(0.0),
                           child: Container(
                             padding: EdgeInsets.all(10.0),
@@ -288,7 +302,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             flex: 1,
             child: Container(
               child: Center(
-                child: Image.network('logo.png'),
+                child: Image.network(logo),
               ),
             ),
           ),
@@ -441,7 +455,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(backgroundImage: AssetImage(user.image)),
+                    CircleAvatar(backgroundImage: NetworkImage(user.image)),
                     SizedBox(
                       width: 10.0,
                     ),
@@ -474,9 +488,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Expanded(
             flex: 1,
             child: Container(
-              child: Center(
-                child: Image.network('assets/logo.png'),
-              ),
+              child: Center(child: Image.network(logo)),
             ),
           ),
           Spacer(),
@@ -511,7 +523,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 height: double.infinity,
                 child: Center(
                   child: CircleAvatar(
-                    backgroundImage: AssetImage(user.image),
+                    backgroundImage: NetworkImage(user.image),
                   ),
                 ),
               ),

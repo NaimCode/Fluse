@@ -7,6 +7,10 @@ import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase/firebase.dart' as fb;
+import 'package:website_university/constantes/widget.dart';
+
+import '../../main.dart';
 
 class AjoutEtablissement extends StatefulWidget {
   @override
@@ -14,71 +18,91 @@ class AjoutEtablissement extends StatefulWidget {
 }
 
 class _AjoutEtablissementState extends State<AjoutEtablissement> {
-  //StorageUploadTask uploadTask;
+  //initialisation
+  final firestoreinstance = FirebaseFirestore.instance;
+  //fb.StorageReference _ref = fb.storage().re;
+
   //Controller
   TextEditingController nomController = TextEditingController();
   TextEditingController villeController = TextEditingController();
   TextEditingController descController = TextEditingController();
   ////Bool
-  bool imageIsCharging = true;
+  bool isCharging = false;
 
-  ///
+  ///diverses variables
+  File imageFile;
+  String imagePath;
+
+  ///choisir une image
+  Future choisirImageEtablissement() async {
+    FilePickerResult pick =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+
+    if (pick != null) {
+      print('pick not null');
+      imageFile = File(pick.files.single.path);
+
+      print('setStat passe');
+    }
+  }
+
   String image;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backColor,
-      appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          title: Text('Ajout d\'un établissement',
-              style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0))),
-      body: Center(
-        child: Container(
-          height: double.infinity,
-          width: 810,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                //add image
-                Expanded(child: imageEtablissement()),
-                SizedBox(
-                  height: 10,
-                ),
-                //nom de l'etablissment
-                nomTextField(),
-                SizedBox(
-                  height: 10,
-                ),
-                //nom de l'etablissment
-                villeTextField(),
-                SizedBox(
-                  height: 10,
-                ),
-                descTextField(),
-                SizedBox(
-                  height: 10,
-                ),
-                FloatingActionButton(
-                  tooltip: 'Ajouter',
-                  onPressed: () {},
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
+    return isCharging
+        ? chargement()
+        : Scaffold(
+            backgroundColor: backColor,
+            appBar: AppBar(
+                centerTitle: true,
+                backgroundColor: Colors.white,
+                title: Text('Ajout d\'un établissement',
+                    style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0))),
+            body: Center(
+              child: Container(
+                height: double.infinity,
+                width: 810,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      //add image
+                      Expanded(child: imageEtablissement()),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      //nom de l'etablissment
+                      nomTextField(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      //nom de l'etablissment
+                      villeTextField(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      descTextField(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      FloatingActionButton(
+                        tooltip: 'Ajouter',
+                        onPressed: () {},
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        backgroundColor: primary,
+                      )
+                    ],
                   ),
-                  backgroundColor: primary,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                ),
+              ),
+            ));
   }
 
   Tooltip imageEtablissement() {
@@ -86,9 +110,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
       message: 'Ajouter une image',
       child: InkWell(
         onTap: () {
-          setState(() {
-            imageIsCharging = !imageIsCharging;
-          });
+          choisirImageEtablissement();
         },
         child: Card(
           color: backColor,
@@ -97,27 +119,14 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
               color: backColor,
               height: 300,
               width: 500,
-              child: !imageIsCharging
+              child: (imageFile == null)
                   ? Icon(
                       Icons.add_a_photo,
                       color: Colors.black45,
                     )
-                  : imageChargement()),
+                  : Image.asset('avatar.jpg', fit: BoxFit.cover)),
         ),
       ),
-    );
-  }
-
-  Column imageChargement() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SpinKitThreeBounce(
-          color: primary,
-          size: 30.0,
-        ),
-        Text('Chargement de l\'image')
-      ],
     );
   }
 

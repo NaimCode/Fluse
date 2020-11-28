@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
+import 'package:website_university/services/variableStatic.dart';
 
 // ignore: must_be_immutable
 class Discussion extends StatefulWidget {
@@ -15,7 +16,7 @@ class _DiscussionState extends State<Discussion> {
   String channel = 'Global';
 
   List<Message> listMessage;
-  User user = User(nom: 'Naim Abdelkerim', admin: true, image: 'avatar.jpg');
+  User user = User(nom: 'Naim Abdelkerim', admin: true, image: avatar);
   @override
   void initState() {
     listMessage = listMessages;
@@ -43,7 +44,8 @@ class _DiscussionState extends State<Discussion> {
     return Scaffold(
       backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: backColor,
+        elevation: (Get.width >= 810) ? 0.0 : 10.0,
+        backgroundColor: (Get.width <= 810) ? Colors.white : backColor,
         //check
         title: Tooltip(
           message: 'Discussions',
@@ -54,7 +56,7 @@ class _DiscussionState extends State<Discussion> {
           ),
         ),
         centerTitle: true,
-        elevation: 0.0,
+
         leading: widget.isMobile
             ? IconButton(
                 icon: Icon(
@@ -208,11 +210,22 @@ class _DiscussionState extends State<Discussion> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: TextField(
                   controller: messageText,
-                  decoration: InputDecoration(),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      contentPadding: EdgeInsets.only(
+                          left: 15, bottom: 16, top: 11, right: 15),
+                      hintText: 'Message...'),
                 ),
               ),
             ),
             IconButton(
+              alignment: Alignment.center,
               tooltip: 'Envoyer',
               icon: Icon(Icons.send),
               onPressed: () {
