@@ -75,12 +75,15 @@ class Etablissement {
   String image;
   String description;
   String lien;
-  Etablissement(
-      {this.nom, this.ville, this.image, this.description, this.lien});
+  Etablissement.fromMap(Map<String, dynamic> data) {
+    nom = data['nom'];
+    ville = data['ville'];
+    image = data['image'];
+    description = data['description'];
+    lien = data['lien'];
+  }
 }
 
-Etablissement e =
-    Etablissement(nom: 'Ibn Tofail', ville: 'Kenitra', image: 'ibntofail.jpg');
 ///////////////////
 Document d = Document(
   annee: '2020-2021',
@@ -133,11 +136,3 @@ List<Message> listMessages = [
   m2,
   m,
 ];
-
-Etablissement eta = Etablissement(
-    nom: 'University Ibn Tofail',
-    ville: 'Kenitra',
-    image: 'assets/ibntofail.jpg',
-    description:
-        'L\'université Ibn Tofaïl est une université publique marocaine située à Kénitra. Elle est classée 94ᵉ dans le classement régional 2016 des universités arabes.gfgf ggfgfgfg gfg f gf gfgfgfgfgf gfgf gfg fgfgfg  rtrtrt trttrtrt rtrt');
-List<Etablissement> listEtablissement = [eta, eta, eta, eta, eta];

@@ -84,6 +84,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
         nomController.clear();
         villeController.clear();
         descController.clear();
+        lienController.clear();
         image = null;
         selected = false;
         isCharging = false;

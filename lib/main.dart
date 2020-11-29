@@ -6,6 +6,7 @@ import 'package:website_university/constantes/model.dart';
 import 'package:website_university/routes/home.dart';
 
 import 'package:website_university/routes/pages/ajoutEtablissement.dart';
+import 'package:website_university/routes/pages/ajoutdocument.dart';
 import 'package:website_university/services/firestorage.dart';
 import 'package:website_university/splash.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: FluseWebsite(),
+      home: AjoutDocument(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -50,7 +51,7 @@ class _FluseWebsiteState extends State<FluseWebsite> {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();
         return Scaffold(
-          body: AjoutEtablissement(),
+          body: Home(),
         );
       },
     );

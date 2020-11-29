@@ -1,8 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
+import 'package:website_university/constantes/widget.dart';
+import 'package:website_university/services/firestorage.dart';
+import 'package:firebase_web/firestore.dart';
+import 'package:firebase_web/firebase.dart';
 
 class Etablissements extends StatefulWidget {
   @override
@@ -10,10 +17,16 @@ class Etablissements extends StatefulWidget {
 }
 
 class _EtablissementsState extends State<Etablissements> {
-  List<Etablissement> list = [];
+  /////List
+  List listEtablissement = [];
+  List listInitial = [];
+  /////future
+  var future;
+  Stream streamEta;
+
   @override
   void initState() {
-    list = listEtablissement;
+    streamEta = firestore().collection('Etablissement').onSnapshot;
     // TODO: implement initState
     super.initState();
   }
@@ -23,144 +36,148 @@ class _EtablissementsState extends State<Etablissements> {
   }
 
   TextEditingController rechercheEtablissement = TextEditingController();
+  ScrollController scrollModel = ScrollController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: searchBar(),
-      body: grid(),
+    return FutureBuilder(
+      //future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return chargement();
+        return Scaffold(
+          appBar: searchBar(),
+          body: grid(),
+        );
+      },
     );
   }
 
-  Container grid() {
-    return Container(
-      child: GridView.builder(
-        itemCount: list.length,
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount:
-                ((Get.width <= 1000 && Get.width > 810) || (Get.width < 600))
-                    ? 1
-                    : 2),
-        itemBuilder: (context, index) {
-          return Tooltip(
-            message: 'Afficher plus de détail',
-            child: InkWell(
-              hoverColor: primary,
-              onTap: () {
-                Get.snackbar('${list[index].nom}',
-                    '${list[index].ville}-${list[index].description}');
-                // Get.defaultDialog(
-                //   backgroundColor: Colors.white,
-                //   content: Column(
-                //     children: [
-                //       Expanded(
-                //         child: Image.asset(
-                //           listEtablissement[index].image,
-                //           fit: BoxFit.cover,
-                //         ),
-                //       ),
-                //       Expanded(
-                //         child: Container(
-                //           child: Column(
-                //             children: [
-                //               Text(
-                //                 listEtablissement[index].nom,
-                //                 style: TextStyle(
-                //                     fontFamily: 'Didac',
-                //                     fontSize: 24,
-                //                     fontWeight: FontWeight.bold),
-                //               ),
-                //               Text(
-                //                 listEtablissement[index].ville,
-                //                 style: TextStyle(
-                //                   fontFamily: 'Didac',
-                //                   fontSize: 18,
-                //                 ),
-                //               ),
-                //               Text(
-                //                 listEtablissement[index].description,
-                //                 style: TextStyle(
-                //                   fontFamily: 'Didac',
-                //                   fontSize: 14,
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  color: primary,
-                  elevation: 8.8,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 100,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.network(
-                              list[index].image,
-                              // height: ((Get.width <= 1000 && Get.width > 810) ||
-                              //         (Get.width < 600))
-                              //     ? 200
-                              //     : 50.0,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 70,
-                        padding: EdgeInsets.only(left: 8.0, bottom: 8.0),
-                        child: ListView(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              list[index].nom,
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 25,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              list[index].ville,
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 18,
-                                  color: Colors.white70),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+  StreamBuilder grid() {
+    return StreamBuilder(
+      stream: streamEta,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          listEtablissement.clear();
+          snapshot.data.docs.forEach((element) {
+            Etablissement model = Etablissement.fromMap(element.data());
+            listEtablissement.add(model);
+          });
+          //print(listEtablissement.length);
+        } else
+          print('en cours');
+        return snapshot.hasData
+            ? Scrollbar(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: GridView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                            ((Get.width <= 1000 && Get.width > 810) ||
+                                    (Get.width < 600))
+                                ? 1
+                                : 2),
+                    itemBuilder: (context, index) {
+                      String image = snapshot.data.docs[index].data()['image'];
+                      String nom = snapshot.data.docs[index].data()['nom'];
+                      String ville = snapshot.data.docs[index].data()['ville'];
+                      String description =
+                          snapshot.data.docs[index].data()['description'];
+                      String lien = snapshot.data.docs[index].data()['lien'];
+
+                      bool searched = (rechercheEtablissement.text.isEmpty ||
+                          nom.toLowerCase().contains(
+                              rechercheEtablissement.text.toLowerCase()) ||
+                          ville.toLowerCase().contains(
+                              rechercheEtablissement.text.toLowerCase()));
+                      return searched
+                          ? Tooltip(
+                              message: 'Afficher plus de détail',
+                              child: InkWell(
+                                hoverColor: primary,
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    color: primary,
+                                    elevation: 8.8,
+                                    child: Container(
+                                      child: Stack(
+                                        alignment: Alignment.bottomLeft,
+                                        children: [
+                                          Container(
+                                            height: double.infinity,
+                                            width: double.infinity,
+                                            child: Image.network(
+                                              image,
+                                              // height: ((Get.width <= 1000 && Get.width > 810) ||
+                                              //         (Get.width < 600))
+                                              //     ? 200
+                                              //     : 50.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          Container(
+                                            color: primary.withOpacity(0.5),
+                                            height: 100,
+                                            width: double.infinity,
+                                            padding: EdgeInsets.only(
+                                                left: 8.0, bottom: 8.0),
+                                            child: Scrollbar(
+                                              // controller: scrollModel,
+                                              // isAlwaysShown: true,
+                                              child: ListView(
+                                                children: [
+                                                  Text(
+                                                    nom,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Ubuntu',
+                                                        fontSize: 29,
+                                                        color: Colors.white),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(
+                                                    ville,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Ubuntu',
+                                                        fontSize: 18,
+                                                        color: Colors.white70),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : null;
+                    },
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              )
+            : chargement();
+      },
     );
   }
 
   AppBar searchBar() {
     return AppBar(
+      leading: null,
       toolbarHeight: 70,
       backgroundColor: Colors.white,
       elevation: 0.0,
       title: Padding(
         padding:
-            EdgeInsets.only(top: 10.0, right: 30.0, left: 30.0, bottom: 10),
+            EdgeInsets.only(top: 10.0, right: 20.0, left: 20.0, bottom: 10),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -190,7 +207,12 @@ class _EtablissementsState extends State<Etablissements> {
                 tooltip: 'Rechercher',
                 alignment: Alignment.center,
                 color: primary,
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    streamEta =
+                        firestore().collection('Etablissement').onSnapshot;
+                  });
+                },
                 icon: Icon(
                   Icons.search,
                   color: primary,

@@ -8,6 +8,7 @@ import 'package:website_university/main.dart';
 import 'package:website_university/routes/bottomNavigation.dart';
 import 'package:website_university/routes/discussion.dart';
 import 'package:website_university/routes/pages/accueil.dart';
+import 'package:website_university/routes/pages/ajoutEtablissement.dart';
 import 'package:website_university/routes/pages/contact.dart';
 import 'package:website_university/routes/pages/documents.dart';
 import 'package:website_university/routes/pages/etablissements.dart';
@@ -33,7 +34,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool addClose = true;
   double add = 0.0;
   /////User//////////
-  User user = User(nom: 'Naim Abdelkerim', admin: true, image: avatar);
+  User user = User(nom: 'Naim Abdelkerim', admin: true, image: avatar2);
   //Index pour le navBar
   String selectItemNav = 'Etablissements';
 
@@ -154,7 +155,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             'Etablissement',
                             style: TextStyle(color: Colors.white),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(AjoutEtablissement());
+                          },
                         ),
                       )),
                 ],
@@ -195,7 +198,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 children: [
                   Expanded(
                     child: Container(
-                      child: Image.network(user.image,fit: BoxFit.cover,),
+                      child: Image.network(
+                        user.image,
+                        fit: BoxFit.fill,
+                        height: 300,
+                      ),
                     ),
                   ),
                   Container(
