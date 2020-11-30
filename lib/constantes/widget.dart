@@ -3,10 +3,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/services/firestorage.dart';
 
-Scaffold chargement() {
-  return Scaffold(
-    backgroundColor: Colors.white,
-    body: SpinKitThreeBounce(
+Container chargement() {
+  return Container(
+    color: Colors.white,
+    child: SpinKitThreeBounce(
       color: primary,
       size: 30,
     ),
@@ -25,6 +25,32 @@ final snackBarEtablissment = SnackBar(
   ],
 ));
 final snackBarEtablissementEchec = SnackBar(
+    content: Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'Erreur, verifiez que vous avez saisi tous les champs!',
+      style: TextStyle(fontSize: 20.0, color: Colors.red),
+    ),
+    Icon(
+      Icons.error,
+      color: Colors.red,
+    )
+  ],
+));
+
+final snackBarDocument = SnackBar(
+    content: Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'Le document été ajouté',
+      style: TextStyle(fontSize: 20.0, color: Colors.white),
+    ),
+    Icon(Icons.verified, color: Colors.white)
+  ],
+));
+final snackBarDocumentEchec = SnackBar(
     content: Row(
   mainAxisAlignment: MainAxisAlignment.spaceBetween,
   children: [

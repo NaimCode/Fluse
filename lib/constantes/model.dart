@@ -1,4 +1,5 @@
 //model de l'information
+import 'package:smart_select/smart_select.dart';
 import 'package:website_university/constantes/string.dart';
 import 'package:website_university/services/variableStatic.dart';
 
@@ -135,4 +136,24 @@ List<Information> listInfo = [
 List<Message> listMessages = [
   m2,
   m,
+];
+List<S2Choice<String>> optionsSemestre = [
+  S2Choice<String>(value: 'S1', title: 'S1'),
+  S2Choice<String>(value: 'S2', title: 'S2'),
+  S2Choice<String>(value: 'S3', title: 'S3'),
+  S2Choice<String>(value: 'S4', title: 'S4'),
+  S2Choice<String>(value: 'S5', title: 'S5'),
+  S2Choice<String>(value: 'S6', title: 'S6'),
+];
+List<S2Choice<String>> optionsAnnee = [
+  S2Choice<String>(value: '2020-2021', title: '2020-2021'),
+  S2Choice<String>(value: '2019-2020', title: '2019-2020'),
+  S2Choice<String>(value: '2018-2019', title: '2018-2019'),
+  S2Choice<String>(value: '2017-2018', title: '2017-2018'),
+  S2Choice<String>(value: '2016-2017', title: '2016-2017'),
+  S2Choice<String>(value: '2015-2016', title: '2015-2016'),
+  S2Choice<String>(value: '2014-2015', title: '2014-2015'),
+  S2Choice<String>(value: '2013-2014', title: '2013-2014'),
+  S2Choice<String>(value: '2012-2013', title: '2012-2013'),
+  S2Choice<String>(value: '2011-2012', title: '2011-2012'),
 ];

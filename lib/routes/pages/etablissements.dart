@@ -36,11 +36,11 @@ class _EtablissementsState extends State<Etablissements> {
   }
 
   TextEditingController rechercheEtablissement = TextEditingController();
-  ScrollController scrollModel = ScrollController();
+  //ScrollController scrollModel = ScrollController();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      //future: future,
+      // future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();

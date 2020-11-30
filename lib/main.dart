@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: AjoutDocument(),
+      home: FluseWebsite(),
       debugShowCheckedModeBanner: false,
     );
   }

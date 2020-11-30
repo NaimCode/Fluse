@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:firebase_web/firebase.dart' as fb;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:website_university/constantes/couleur.dart';
 
@@ -61,6 +63,15 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
         isCharging = true;
         emptyField = false;
       });
+      var future = await fb.firestore().collection('Document').get();
+
+      print('after query');
+
+      future.docs.forEach((element) {
+        if (nomController.text == element.data()['nom'].toString())
+          return 'exist';
+      });
+
       var ref = FirebaseStorage.instance
           .ref()
           .child('Etablissement/${nomController.text}');
@@ -89,12 +100,12 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
         selected = false;
         isCharging = false;
       });
-      return true;
+      return 'succes';
     } else {
       setState(() {
         emptyField = true;
       });
-      return false;
+      return 'erreur';
     }
   }
 
@@ -144,21 +155,44 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
                       SizedBox(
                         height: 10,
                       ),
-                      FloatingActionButton(
-                        tooltip: 'Ajouter',
-                        onPressed: () async {
-                          var check = await uploadEtablissement();
-                          check
-                              ? Scaffold.of(context)
-                                  .showSnackBar(snackBarEtablissment)
-                              : Scaffold.of(context)
-                                  .showSnackBar(snackBarEtablissementEchec);
-                        },
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
+                      Builder(
+                        builder: (context) => FloatingActionButton(
+                          tooltip: 'Ajouter',
+                          onPressed: () async {
+                            var check = await uploadEtablissement();
+
+                            if (check == 'erreur')
+                              Get.rawSnackbar(
+                                  title: 'Ajout d\'un établissement',
+                                  message:
+                                      'Erreur, vérifiez que vous avez saisi tous les champs!',
+                                  icon: Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                  ));
+                            if (check == 'succes')
+                              Get.rawSnackbar(
+                                  title: 'Ajout d\'un établissement',
+                                  message: 'L\'établissement a été ajouté',
+                                  icon: Icon(
+                                    Icons.verified,
+                                    color: Colors.white,
+                                  ));
+                            if (check == 'exist')
+                              Get.rawSnackbar(
+                                  title: 'Ajout d\'un établissement',
+                                  message: 'L\'établissement existe déjà',
+                                  icon: Icon(
+                                    Icons.error_sharp,
+                                    color: Colors.yellow,
+                                  ));
+                          },
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                          backgroundColor: primary,
                         ),
-                        backgroundColor: primary,
                       )
                     ],
                   ),

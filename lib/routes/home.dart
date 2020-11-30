@@ -9,6 +9,7 @@ import 'package:website_university/routes/bottomNavigation.dart';
 import 'package:website_university/routes/discussion.dart';
 import 'package:website_university/routes/pages/accueil.dart';
 import 'package:website_university/routes/pages/ajoutEtablissement.dart';
+import 'package:website_university/routes/pages/ajoutdocument.dart';
 import 'package:website_university/routes/pages/contact.dart';
 import 'package:website_university/routes/pages/documents.dart';
 import 'package:website_university/routes/pages/etablissements.dart';
@@ -134,7 +135,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           'Document',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(AjoutDocument());
+                        },
                       )),
                   SizedBox(
                     width: (Get.width <= 362) ? 0.0 : 30,
