@@ -1,6 +1,8 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:website_university/constantes/couleur.dart';
+import 'package:website_university/constantes/widget.dart';
 import 'package:website_university/routes/home.dart';
 import 'package:get/get.dart';
 import 'package:website_university/services/authentification.dart';
@@ -17,56 +19,85 @@ class _SplashState extends State<Splash> {
   String selectItemNav = 's\'enregistrer';
   String erreurEmail = '';
   String erreurPassword = '';
+  String facebookLogo = '';
+  String googleLogo = '';
+  var future;
+  getasset() async {
+    facebookLogo = await FirebaseStorage.instance
+        .ref()
+        .child("Assets/facebook.png")
+        .getDownloadURL();
+    googleLogo = await FirebaseStorage.instance
+        .ref()
+        .child("Assets/google.png")
+        .getDownloadURL();
+    return 'Complete';
+  }
+
+  @override
+  void initState() {
+    future = getasset();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        child: Row(
-          children: [
-            //Left
-            (MediaQuery.of(context).size.width >= 840)
-                ? Expanded(
-                    flex: 3,
-                    child: Container(
-                      height: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Expanded(child: Image.network(left1)),
-                          Expanded(child: Image.network(left2)),
-                        ],
-                      ),
-                    ),
-                  )
-                : Container(),
-            //Center
-            Expanded(
-              flex: 4,
-              child: SingleChildScrollView(
-                child: (selectItemNav != 'se connecter')
-                    ? enregistrement()
-                    : connexion(),
-              ),
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return chargement();
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Container(
+            child: Row(
+              children: [
+                //Left
+                (MediaQuery.of(context).size.width >= 840)
+                    ? Expanded(
+                        flex: 3,
+                        child: Container(
+                          height: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(child: Image.network(left1)),
+                              Expanded(child: Image.network(left2)),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
+                //Center
+                Expanded(
+                  flex: 4,
+                  child: SingleChildScrollView(
+                    child: (selectItemNav != 'se connecter')
+                        ? enregistrement()
+                        : connexion(),
+                  ),
+                ),
+                //Right
+                (MediaQuery.of(context).size.width >= 840)
+                    ? Expanded(
+                        flex: 3,
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(child: Image.network(right1)),
+                              Expanded(child: Image.network(right2)),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
-            //Right
-            (MediaQuery.of(context).size.width >= 840)
-                ? Expanded(
-                    flex: 3,
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Expanded(child: Image.network(right1)),
-                          Expanded(child: Image.network(right2)),
-                        ],
-                      ),
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

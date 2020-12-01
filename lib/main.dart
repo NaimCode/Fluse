@@ -55,6 +55,9 @@ class FluseWebsite extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();
+        if (snapshot.connectionState == ConnectionState.done) {
+          print(snapshot.data);
+        }
         return StreamBuilder<User>(
           stream: firebaseUser.authStateChanges,
           builder: (context, snapshot) {

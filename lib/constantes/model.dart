@@ -157,3 +157,36 @@ List<S2Choice<String>> optionsAnnee = [
   S2Choice<String>(value: '2012-2013', title: '2012-2013'),
   S2Choice<String>(value: '2011-2012', title: '2011-2012'),
 ];
+
+class Utilisateur {
+  String uid;
+  String nom;
+  String email;
+  String password;
+  String image;
+  String filiere;
+  String semestre;
+  String universite;
+  bool admin;
+  Utilisateur.fromMap(Map<String, dynamic> data) {
+    nom = data['nom'];
+    uid = data['ville'];
+    image = data['image'];
+    email = data['email'];
+    password = data['password'];
+    filiere = data['filiere'];
+    semestre = data['semestre'];
+    universite = data['universite'];
+    admin = data['admin'];
+  }
+  Utilisateur(
+      {this.uid,
+      this.nom,
+      this.filiere,
+      this.password,
+      this.email,
+      this.universite,
+      this.semestre,
+      this.image,
+      this.admin});
+}
