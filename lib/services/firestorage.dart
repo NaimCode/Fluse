@@ -27,10 +27,42 @@ getAvatar2() async {
   return url;
 }
 
+getleft() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/left1.jpg");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getleft2() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/left2.jpg");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getright1() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/right1.jpg");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getright2() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/right2.jpg");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
 Future getAssets() async {
   logo = await getLogo();
   avatar = await getAvatar1();
   avatar2 = await getAvatar2();
+  left1 = await getleft();
+  left2 = await getleft2();
+  right1 = await getright1();
+  right2 = await getright2();
   return 'finish';
 }
 

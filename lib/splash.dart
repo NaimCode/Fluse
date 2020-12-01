@@ -33,8 +33,8 @@ class _SplashState extends State<Splash> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Expanded(child: Image.asset('left1.png')),
-                          Expanded(child: Image.asset('left2.png')),
+                          Expanded(child: Image.network(left1)),
+                          Expanded(child: Image.network(left2)),
                         ],
                       ),
                     ),
@@ -57,8 +57,8 @@ class _SplashState extends State<Splash> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Expanded(child: Image.asset('right1.png')),
-                          Expanded(child: Image.asset('right2.png')),
+                          Expanded(child: Image.network(right1)),
+                          Expanded(child: Image.network(right2)),
                         ],
                       ),
                     ),

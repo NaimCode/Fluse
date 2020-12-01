@@ -50,26 +50,23 @@ class FluseWebsite extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<Authentification>();
     print(firebaseUser);
-    return StreamBuilder<User>(
-      stream: firebaseUser.authStateChanges,
+    return FutureBuilder(
+      future: getAssets(),
       builder: (context, snapshot) {
-        //if(snapshot.connectionState=ConnectionState.waiting)return chargement();
-        if (snapshot.hasData) {
-          print(snapshot);
-          return FutureBuilder(
-            future: getAssets(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return chargement();
-              return Scaffold(
-                body: Home(),
-              );
-            },
-          );
-        } else
-          return FutureBuilder(
-            builder: (context, snapshot) => Splash(),
-          );
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return chargement();
+        return StreamBuilder<User>(
+          stream: firebaseUser.authStateChanges,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return chargement();
+            if (snapshot.hasData) {
+              print(snapshot);
+              return Home();
+            } else
+              return Splash();
+          },
+        );
       },
     );
   }
