@@ -16,7 +16,7 @@ class _DiscussionState extends State<Discussion> {
   String channel = 'Global';
 
   List<Message> listMessage;
-  User user = User(nom: 'Naim Abdelkerim', admin: true, image: avatar);
+  Usere user = Usere(nom: 'Naim Abdelkerim', admin: true, image: avatar);
   @override
   void initState() {
     listMessage = listMessages;

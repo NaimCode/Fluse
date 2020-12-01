@@ -24,7 +24,7 @@ List<String> listMenu = [
 
 ///////
 class Information {
-  User user;
+  Usere user;
   String description;
   Document document;
   String date;
@@ -34,18 +34,18 @@ class Information {
 
 //model discution
 class Message {
-  User user;
+  Usere user;
   String date;
   String message;
   Message({this.user, this.date, this.message});
 }
 
 //model de l'utilisateur
-class User {
+class Usere {
   String nom;
   bool admin;
   String image;
-  User({this.nom, this.admin, this.image});
+  Usere({this.nom, this.admin, this.image});
 }
 
 //model d'un document
@@ -96,12 +96,12 @@ Document d = Document(
   description:
       'C\'est le deuxième chapitre concernant les essentiels de Flutter',
 );
-User user = User(
+Usere user = Usere(
   nom: 'Naim Abdelkerim',
   admin: true,
   image: avatar,
 );
-User user2 = User(
+Usere user2 = Usere(
   nom: 'Ali',
   admin: false,
   image: avatar2,

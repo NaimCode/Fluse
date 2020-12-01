@@ -63,7 +63,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
         isCharging = true;
         emptyField = false;
       });
-      var future = await fb.firestore().collection('Document').get();
+      var future = await fb.firestore().collection('Etablissement').get();
 
       print('after query');
 
@@ -91,6 +91,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
       };
 
       firestoreinstance.collection('Etablissement').doc().set(etablissement);
+
       setState(() {
         nomController.clear();
         villeController.clear();
@@ -154,6 +155,14 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
                       descTextField(),
                       SizedBox(
                         height: 10,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          print('nom: ${nomController.text}');
+                          print('ville: ${villeController.text}');
+                          print('description: ${descController.text}');
+                        },
+                        icon: Icon(Icons.visibility),
                       ),
                       Builder(
                         builder: (context) => FloatingActionButton(

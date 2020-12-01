@@ -1,6 +1,8 @@
+import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:website_university/constantes/widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Accueil extends StatefulWidget {
   @override
@@ -8,7 +10,12 @@ class Accueil extends StatefulWidget {
 }
 
 class _AccueilState extends State<Accueil> {
-  double elev = 2.0;
+  incrementCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt('counter') ?? 0) + 1;
+    print('Pressed $counter times.');
+    await prefs.setInt('counter', counter);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +24,17 @@ class _AccueilState extends State<Accueil> {
         child: Center(
           child: Material(
             child: InkWell(
-              onHover: (isH) {
-                setState(() {
-                  isH ? elev = 20.0 : elev = 2.0;
-                });
-              },
               child: Container(
                 height: 200,
                 width: 400,
                 child: Card(
-                  elevation: elev,
+                  elevation: 10.0,
                   color: Colors.amber[900],
                   child: Center(
-                    child: Text('Hi'),
+                    child: FloatingActionButton(
+                      onPressed: incrementCounter,
+                      child: Icon(Icons.add),
+                    ),
                   ),
                 ),
               ),

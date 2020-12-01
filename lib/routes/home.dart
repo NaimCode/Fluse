@@ -35,7 +35,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool addClose = true;
   double add = 0.0;
   /////User//////////
-  User user = User(nom: 'Naim Abdelkerim', admin: true, image: avatar2);
+  Usere user = Usere(nom: 'Naim Abdelkerim', admin: true, image: avatar2);
   //Index pour le navBar
   String selectItemNav = 'Etablissements';
 

@@ -3,6 +3,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/routes/home.dart';
 import 'package:get/get.dart';
+import 'package:website_university/services/authentification.dart';
+import 'package:website_university/services/variableStatic.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -75,7 +79,7 @@ class _SplashState extends State<Splash> {
           Container(
             child: Padding(
               padding: const EdgeInsets.all(38.0),
-              child: Image.asset('logo.png'),
+              child: Image.network(logo),
             ),
           ),
           //Connextion-Enregistrement
@@ -214,24 +218,30 @@ class _SplashState extends State<Splash> {
                   child: Wrap(
                     // alignment: WrapAlignment.spaceAround,
                     children: [
-                      FlatButton(
-                        child: Image.asset(
-                          'facebook.png',
-                          height: 40,
-                          width: 40,
+                      Tooltip(
+                        message: 'Facebook',
+                        child: FlatButton(
+                          child: Image.asset(
+                            'facebook.png',
+                            height: 40,
+                            width: 40,
+                          ),
+                          onPressed: () {},
                         ),
-                        onPressed: () {},
                       ),
                       SizedBox(
                         width: 30.0,
                       ),
-                      FlatButton(
-                        child: Image.asset(
-                          'google.png',
-                          height: 40,
-                          width: 40,
+                      Tooltip(
+                        message: 'Google',
+                        child: FlatButton(
+                          child: Image.asset(
+                            'google.png',
+                            height: 40,
+                            width: 40,
+                          ),
+                          onPressed: () {},
                         ),
-                        onPressed: () {},
                       )
                     ],
                   ),
@@ -277,6 +287,8 @@ class _SplashState extends State<Splash> {
   }
 
   Container connexion() {
+    TextEditingController mail = TextEditingController();
+    TextEditingController password = TextEditingController();
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -285,7 +297,7 @@ class _SplashState extends State<Splash> {
           Container(
             child: Padding(
               padding: const EdgeInsets.all(38.0),
-              child: Image.asset('logo.png'),
+              child: Image.network(logo),
             ),
           ),
           //Connextion-Enregistrement
@@ -319,6 +331,7 @@ class _SplashState extends State<Splash> {
                             ? 240
                             : 290.0,
                         child: TextFormField(
+                          controller: mail,
                           decoration: new InputDecoration(
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -358,6 +371,8 @@ class _SplashState extends State<Splash> {
                             ? 240.0
                             : 290.0,
                         child: TextFormField(
+                          controller: password,
+                          obscureText: true,
                           decoration: new InputDecoration(
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -385,24 +400,30 @@ class _SplashState extends State<Splash> {
                   child: Wrap(
                     // alignment: WrapAlignment.spaceAround,
                     children: [
-                      FlatButton(
-                        child: Image.asset(
-                          'facebook.png',
-                          height: 40,
-                          width: 40,
+                      Tooltip(
+                        message: 'Facebook',
+                        child: FlatButton(
+                          child: Image.asset(
+                            'facebook.png',
+                            height: 40,
+                            width: 40,
+                          ),
+                          onPressed: () {},
                         ),
-                        onPressed: () {},
                       ),
                       SizedBox(
                         width: 30.0,
                       ),
-                      FlatButton(
-                        child: Image.asset(
-                          'google.png',
-                          height: 40,
-                          width: 40,
+                      Tooltip(
+                        message: 'Google',
+                        child: FlatButton(
+                          child: Image.asset(
+                            'google.png',
+                            height: 40,
+                            width: 40,
+                          ),
+                          onPressed: () {},
                         ),
-                        onPressed: () {},
                       )
                     ],
                   ),
@@ -426,7 +447,11 @@ class _SplashState extends State<Splash> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       color: primary,
-                      onPressed: () {},
+                      onPressed: () {
+                        context
+                            .read<Authentification>()
+                            .connection(mail.text.trim(), password.text.trim());
+                      },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 3.0, horizontal: 30.0),

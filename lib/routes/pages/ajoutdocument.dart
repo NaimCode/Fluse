@@ -2,16 +2,17 @@
 //import 'package:firebase/firestore.dart';
 
 import 'dart:html';
-import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-import 'package:firebase_web/firebase.dart' as fb;
+//import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase/firebase.dart';
+//import 'package:firebase_web/firebase.dart' as fb;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
+
 import 'package:website_university/constantes/couleur.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:website_university/constantes/model.dart';
@@ -34,10 +35,12 @@ class _AjoutDocumentState extends State<AjoutDocument> {
   List<S2Choice<String>> optionsFiliere = [];
   String semestre = '';
   String annee = '';
+  List<S2Choice<String>> temp = [];
   getFiliere() async {
-    List<S2Choice<String>> temp = [];
-    var future = await fb.firestore().collection('Filiere').get();
+    print('debut query');
 
+    var future = await firestore().collection('Filiere').get();
+    //var future = await fb.firestore().collection('Etablissement').get();
     print('after query');
 
     future.docs.forEach((element) {
@@ -83,7 +86,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
         isCharging = true;
         emptyField = false;
       });
-      var future = await fb.firestore().collection('Document').get();
+      var future = await firestore().collection('Document').get();
 
       print('after query');
 
@@ -99,7 +102,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
           .ref()
           .child('Document/${titreController.text}');
 
-      UploadTask uploadTask = ref.putData(pdf);
+      var uploadTask = ref.putData(pdf);
       await uploadTask.whenComplete(() async {
         pdfUrl = await ref.getDownloadURL();
         print(pdfUrl);
@@ -188,15 +191,17 @@ class _AjoutDocumentState extends State<AjoutDocument> {
                             ),
                             Material(
                               elevation: 1.0,
-                              child: SmartSelect<String>.single(
-                                  placeholder: '',
-                                  title: 'Choisir une filière',
-                                  value: filiere,
-                                  choiceItems: optionsFiliere,
-                                  onChange: (state) {
-                                    setState(() => filiere = state.value);
-                                    print('$filiere  a ete selectionne');
-                                  }),
+                              child: optionsFiliere.isNotEmpty
+                                  ? SmartSelect<String>.single(
+                                      placeholder: '',
+                                      title: 'Choisir une filière',
+                                      value: filiere,
+                                      choiceItems: optionsFiliere,
+                                      onChange: (state) {
+                                        setState(() => filiere = state.value);
+                                        print('$filiere  a ete selectionne');
+                                      })
+                                  : chargement(),
                             ),
                             SizedBox(
                               height: 10,
