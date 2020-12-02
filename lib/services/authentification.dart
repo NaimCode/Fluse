@@ -7,6 +7,10 @@ class Authentification {
   FirebaseAuth _firebaseAuth;
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
   Authentification(this._firebaseAuth);
+  deconnection() async {
+    await _firebaseAuth.signOut();
+  }
+
   enregistrementAuth(String mail, String password, String nom) async {
     try {
       var user = await FirebaseAuth.instance.createUserWithEmailAndPassword(

@@ -60,10 +60,12 @@ class _SplashState extends State<Splash> {
       Get.rawSnackbar(
           title: 'Connexion',
           message: check,
-          icon: Icon(
-            Icons.error_sharp,
-            color: Colors.red,
-          ));
+          icon: (check == 'Connexion réussi')
+              ? Icon(Icons.verified, color: Colors.white)
+              : Icon(
+                  Icons.error_sharp,
+                  color: Colors.red,
+                ));
       switch (check) {
         case 'Connexion réussi':
           //go home
@@ -110,7 +112,9 @@ class _SplashState extends State<Splash> {
           title: 'Enregistrement',
           message: check,
           icon: Icon(
-            Icons.error_sharp,
+            (check == 'Enregistrement réussi')
+                ? Icon(Icons.verified, color: Colors.white)
+                : Icons.error_sharp,
             color: Colors.red,
           ));
 
@@ -139,10 +143,6 @@ class _SplashState extends State<Splash> {
       }
       print('switch fin');
     }
-    setState(() {
-      isCharging = false;
-    });
-    print('sortie');
   }
 
   @override

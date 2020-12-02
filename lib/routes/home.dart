@@ -105,9 +105,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 )
               : Container(),
-          SizedBox(
-            width: 20,
-          )
         ],
       ),
       body: Container(
@@ -232,12 +229,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Container(
                     width: double.infinity,
                     color: primary,
-                    child: Text(
-                      '${user.nom}',
-                      style: TextStyle(
-                          fontFamily: 'Ubuntu',
-                          color: Colors.white,
-                          fontSize: 20.0),
+                    child: Center(
+                      child: Text(
+                        '${user.nom}',
+                        style: TextStyle(
+                            fontFamily: 'Ubuntu',
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
                     ),
                   ),
                 ],
@@ -476,34 +475,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
           //profile
           Expanded(
-            flex: (MediaQuery.of(context).size.width >= 1200) ? 1 : 0,
+            flex: 1,
             child: Container(
               height: double.infinity,
-              child: InkWell(
-                onTap: () {
-                  Get.snackbar('Bonjour', user.nom);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(backgroundImage: NetworkImage(user.image)),
-                    SizedBox(
-                      width: 10.0,
+              child: popMenu(Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(backgroundImage: NetworkImage(user.image)),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    user.nom,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.purple[900],
                     ),
-                    (Get.width >= 1200)
-                        ? Text(
-                            user.nom,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Colors.purple[900],
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
-              ),
+                  ),
+                ],
+              )),
             ),
-          ),
+          )
         ],
       ),
     );
@@ -548,9 +540,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           //profile
           Expanded(
             flex: 1,
-            child: InkWell(
-              onTap: () {},
-              child: Container(
+            child: popMenu(
+              Container(
                 height: double.infinity,
                 child: Center(
                   child: CircleAvatar(
@@ -559,7 +550,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

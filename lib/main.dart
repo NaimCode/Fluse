@@ -47,6 +47,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+bool isCharging = true;
+
 class FluseWebsite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -61,45 +63,46 @@ class FluseWebsite extends StatelessWidget {
           print(snapshot.data);
         }
         return StreamBuilder<User>(
-          stream: firebaseUser.authStateChanges,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return chargement();
-            if (!snapshot.hasData) return Splash();
-            print(snapshot.data.uid);
-            return StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('Utilisateur')
-                    .doc(snapshot.data.uid)
-                    .snapshots(),
-                builder: (context, doc) {
-                  if (doc.connectionState == ConnectionState.waiting)
-                    return chargement();
-                  if (doc.hasData) {
-                    var user = doc.data;
-                    print(user['nom']);
-
-                    Utilisateur utilisateur = Utilisateur(
-                        nom: user['nom'],
-                        image: user['image'] ?? profile,
-                        email: user['email'],
-                        password: user['password'],
-                        filiere: user['filiere'],
-                        semestre: user['semestre'],
-                        admin: user['admin'],
-                        universite: user['universite'],
-                        uid: user['uid']);
-                    return ProxyProvider0(
-                      update: (_, __) => utilisateur,
-                      child: Home(),
-                    );
-                  } else
-                    return Center(
-                      child: Text('Erreur, veuillez raffraichir la page'),
-                    );
-                });
-          },
-        );
+            stream: firebaseUser.authStateChanges,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return chargement();
+              if (!snapshot.hasData)
+                return Splash();
+              else {
+                print(snapshot.data.uid);
+                return StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Utilisateur')
+                        .doc(snapshot.data.uid)
+                        .snapshots(),
+                    builder: (context, doc) {
+                      if (doc.connectionState == ConnectionState.waiting)
+                        return chargement();
+                      if (doc.hasData) {
+                        var user = doc.data;
+                        print(user['nom']);
+                        print(user['image']);
+                        String imageurl = user['image'] ?? profile;
+                        print(profile);
+                        return ProxyProvider0(
+                          update: (_, __) => Utilisateur(
+                              nom: user['nom'],
+                              image: imageurl,
+                              email: user['email'],
+                              password: user['password'],
+                              filiere: user['filiere'],
+                              semestre: user['semestre'],
+                              admin: user['admin'],
+                              universite: user['universite'],
+                              uid: user['uid']),
+                          child: Home(),
+                        );
+                      } else
+                        return chargement();
+                    });
+              }
+            });
       },
     );
   }
