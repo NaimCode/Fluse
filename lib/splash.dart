@@ -17,8 +17,9 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   String selectItemNav = 's\'enregistrer';
-  String erreurEmail = '';
-  String erreurPassword = '';
+  bool obscure = true;
+  bool isCharging = false;
+
   String facebookLogo = '';
   String googleLogo = '';
   var future;
@@ -39,6 +40,109 @@ class _SplashState extends State<Splash> {
     future = getasset();
     // TODO: implement initState
     super.initState();
+  }
+
+//////////////Section connection
+  TextEditingController mail = TextEditingController();
+  TextEditingController password = TextEditingController();
+  bool erreurPassword = false;
+  bool erreurMail = false;
+  bool connectable = true;
+  connexionVerif() async {
+    if (!mail.text.isEmail) {
+      setState(() {
+        erreurMail = true;
+      });
+    } else {
+      var check = await context
+          .read<Authentification>()
+          .connection(mail.text.trim(), password.text.trim());
+      Get.rawSnackbar(
+          title: 'Connexion',
+          message: check,
+          icon: Icon(
+            Icons.error_sharp,
+            color: Colors.red,
+          ));
+      switch (check) {
+        case 'Connexion réussi':
+          //go home
+          break;
+        case 'L\'Email est incorrect':
+          setState(() {
+            erreurMail = true;
+          });
+          break;
+        case 'Le mot de passe est incorrect':
+          setState(() {
+            erreurPassword = true;
+            erreurMail = false;
+          });
+          break;
+        default:
+      }
+    }
+  }
+
+  /////////////////
+  /////////////////Section enregistrement
+  TextEditingController mailE = TextEditingController();
+  TextEditingController passwordE = TextEditingController();
+  TextEditingController nomE = TextEditingController();
+  bool erreurPasswordE = false;
+  bool erreurMailE = false;
+  bool erreurNomE = false;
+  bool connectableE = true;
+  enregistrementVerif() async {
+    print('debut');
+    setState(() {
+      isCharging = true;
+    });
+    if (!mailE.text.isEmail) {
+      setState(() {
+        erreurMailE = true;
+      });
+    } else {
+      print('check debut');
+      var check = await context.read<Authentification>().enregistrementAuth(
+          mailE.text.trim(), passwordE.text.trim(), nomE.text.trim());
+      Get.rawSnackbar(
+          title: 'Enregistrement',
+          message: check,
+          icon: Icon(
+            Icons.error_sharp,
+            color: Colors.red,
+          ));
+
+      switch (check) {
+        case 'Enregistrement réussi':
+
+          //go home
+          break;
+        case 'Email existe déjà':
+          setState(() {
+            erreurMailE = true;
+          });
+          break;
+        case 'Le mot de passe est trop faible, minimum 6 caratères':
+          setState(() {
+            erreurPasswordE = true;
+            erreurMailE = false;
+          });
+          break;
+        case 'L\'Email est invalide':
+          setState(() {
+            erreurMailE = true;
+          });
+          break;
+        default:
+      }
+      print('switch fin');
+    }
+    setState(() {
+      isCharging = false;
+    });
+    print('sortie');
   }
 
   @override
@@ -73,9 +177,11 @@ class _SplashState extends State<Splash> {
                 Expanded(
                   flex: 4,
                   child: SingleChildScrollView(
-                    child: (selectItemNav != 'se connecter')
-                        ? enregistrement()
-                        : connexion(),
+                    child: isCharging
+                        ? chargement()
+                        : (selectItemNav != 'se connecter')
+                            ? enregistrement()
+                            : connexion(),
                   ),
                 ),
                 //Right
@@ -135,7 +241,7 @@ class _SplashState extends State<Splash> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             //                    <--- top side
-                            color: backColor,
+                            color: erreurNomE ? Colors.red : backColor,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -144,6 +250,7 @@ class _SplashState extends State<Splash> {
                             ? 240
                             : 290.0,
                         child: TextFormField(
+                          controller: nomE,
                           decoration: new InputDecoration(
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -174,7 +281,7 @@ class _SplashState extends State<Splash> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             //                    <--- top side
-                            color: backColor,
+                            color: erreurMailE ? Colors.red : backColor,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -183,6 +290,7 @@ class _SplashState extends State<Splash> {
                             ? 240
                             : 290.0,
                         child: TextFormField(
+                          controller: mailE,
                           decoration: new InputDecoration(
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -213,7 +321,7 @@ class _SplashState extends State<Splash> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             //                    <--- top side
-                            color: backColor,
+                            color: erreurPasswordE ? Colors.red : backColor,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -221,16 +329,37 @@ class _SplashState extends State<Splash> {
                         width: (MediaQuery.of(context).size.width <= 340)
                             ? 240
                             : 290.0,
-                        child: TextFormField(
-                          decoration: new InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: 'Mot de passe'),
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            TextFormField(
+                              controller: passwordE,
+                              obscureText: obscure ? true : false,
+                              decoration: new InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
+                                  hintText: 'Mot de passe'),
+                            ),
+                            IconButton(
+                              alignment: Alignment.centerRight,
+                              onPressed: () {
+                                setState(() {
+                                  obscure = !obscure;
+                                });
+                              },
+                              icon: obscure
+                                  ? Icon(
+                                      Icons.visibility,
+                                      size: 20,
+                                    )
+                                  : Icon(Icons.visibility_off, size: 20),
+                            )
+                          ],
                         ),
                       ),
                     ],
@@ -294,9 +423,7 @@ class _SplashState extends State<Splash> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       color: primary,
-                      onPressed: () {
-                        Get.off(Home());
-                      },
+                      onPressed: enregistrementVerif,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 3.0, horizontal: 30.0),
@@ -318,8 +445,6 @@ class _SplashState extends State<Splash> {
   }
 
   Container connexion() {
-    TextEditingController mail = TextEditingController();
-    TextEditingController password = TextEditingController();
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -353,7 +478,7 @@ class _SplashState extends State<Splash> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             //                    <--- top side
-                            color: backColor,
+                            color: erreurMail ? Colors.red : backColor,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -393,7 +518,7 @@ class _SplashState extends State<Splash> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             //                    <--- top side
-                            color: backColor,
+                            color: erreurPassword ? Colors.red : backColor,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -478,11 +603,7 @@ class _SplashState extends State<Splash> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       color: primary,
-                      onPressed: () {
-                        context
-                            .read<Authentification>()
-                            .connection(mail.text.trim(), password.text.trim());
-                      },
+                      onPressed: connexionVerif,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 3.0, horizontal: 30.0),

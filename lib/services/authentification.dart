@@ -1,21 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+final firestoreinstance = FirebaseFirestore.instance;
 
 class Authentification {
   FirebaseAuth _firebaseAuth;
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
   Authentification(this._firebaseAuth);
-  enregistrementAuth(String mail, String password) async {
+  enregistrementAuth(String mail, String password, String nom) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      var user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: mail,
         password: password,
       );
-      return 'Signed UP';
+      try {
+        await user.user.sendEmailVerification();
+        String image, universite, semestre, filiere;
+        bool admin = false;
+        var utilisateurs = {
+          'nom': nom,
+          'email': user.user.email,
+          'password': password,
+          'image': image,
+          'universite': universite,
+          'semestre': semestre,
+          'filiere': filiere,
+          'admin': admin,
+          'uid': user.user.uid,
+        };
+
+        await firestoreinstance
+            .collection('Utilisateur')
+            .doc(user.user.uid)
+            .set(utilisateurs);
+        return 'Enregistrement réussi';
+      } catch (e) {
+        return 'L\'Email est invalide';
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        return 'The password provided is too weak.';
+        return 'Le mot de passe est trop faible, minimum 6 caratères';
       } else if (e.code == 'email-already-in-use') {
-        return 'The account already exists for that email.';
+        return 'Email existe déjà';
       }
     } catch (e) {
       print(e);
@@ -27,12 +53,12 @@ class Authentification {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail, password: password);
-      return 'Signed In';
+      return 'Connexion réussi';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        return 'No user found for that email.';
+        return 'L\'Email est incorrect';
       } else if (e.code == 'wrong-password') {
-        return 'Wrong password provided for that user.';
+        return 'Le mot de passe est incorrect';
       }
     }
   }

@@ -15,7 +15,7 @@ import 'package:website_university/routes/pages/documents.dart';
 import 'package:website_university/routes/pages/etablissements.dart';
 import 'package:website_university/routes/notifications.dart';
 import 'package:website_university/routes/pages/support.dart';
-
+import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:website_university/services/firestorage.dart';
 import 'package:website_university/services/variableStatic.dart';
@@ -23,6 +23,8 @@ import 'package:website_university/services/variableStatic.dart';
 //import '../main.dart';
 
 class Home extends StatefulWidget {
+  Utilisateur user;
+  Home({this.user});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -471,7 +473,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     ),
                     (Get.width >= 1200)
                         ? Text(
-                            user.nom,
+                            widget.user.nom,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               color: Colors.purple[900],

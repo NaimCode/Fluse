@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -63,11 +64,35 @@ class FluseWebsite extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return chargement();
-            if (snapshot.hasData) {
-              print(snapshot);
-              return Home();
-            } else
-              return Splash();
+            if (!snapshot.hasData) return Splash();
+            print(snapshot.data.uid);
+            return StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('Utilisateur')
+                    .doc(snapshot.data.uid)
+                    .snapshots(),
+                builder: (context, doc) {
+                  if (doc.connectionState == ConnectionState.waiting)
+                    return chargement();
+                  if (doc.hasData) {
+                    var user = doc.data;
+                    print(user['nom']);
+                    Utilisateur utilisateur = Utilisateur(
+                        nom: user['nom'],
+                        image: user['image'],
+                        email: user['email'],
+                        password: user['password'],
+                        filiere: user['filiere'] ?? 'SMI',
+                        semestre: user['semestre'] ?? 'SMI',
+                        admin: user['admin'],
+                        universite: user['universite'] ?? 'SMI',
+                        uid: user['uid']);
+                    return Home(user: utilisateur);
+                  } else
+                    return Center(
+                      child: Text('Erreur, veuillez raffraichir la page'),
+                    );
+                });
           },
         );
       },
