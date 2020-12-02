@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:firebase_web/firebase.dart' as fb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:path/path.dart';
 import 'package:website_university/constantes/couleur.dart';
 
 import 'dart:html';
@@ -34,6 +34,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
   bool selected = false;
 
   ///diverses variables
+  String imagePath;
   Uint8List image;
   String imageUrl;
 
@@ -43,6 +44,7 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
     uploadImage.click();
     uploadImage.onChange.listen((event) async {
       final file = uploadImage.files.first;
+      imagePath = basename(file.name);
       final reader = FileReader();
       reader.readAsArrayBuffer(file);
       reader.onLoad.listen((event) {
@@ -72,9 +74,8 @@ class _AjoutEtablissementState extends State<AjoutEtablissement> {
           return 'exist';
       });
 
-      var ref = FirebaseStorage.instance
-          .ref()
-          .child('Etablissement/${nomController.text}');
+      var ref =
+          FirebaseStorage.instance.ref().child('Etablissement/$imagePath');
 
       UploadTask uploadTask = ref.putData(image);
       await uploadTask.whenComplete(() async {

@@ -31,7 +31,7 @@ bottomNav(Utilisateur user) {
               ),
               child: FlatButton(
                 onPressed: () {
-                  Get.to(Notifications(true));
+                  Get.to(Notifications(true, user));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),

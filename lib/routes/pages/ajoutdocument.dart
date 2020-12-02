@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase/firebase.dart';
 //import 'package:firebase_web/firebase.dart' as fb;
-
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -19,6 +19,8 @@ import 'package:website_university/constantes/model.dart';
 import 'package:website_university/constantes/widget.dart';
 
 class AjoutDocument extends StatefulWidget {
+  Utilisateur user;
+  AjoutDocument(this.user);
   @override
   _AjoutDocumentState createState() => _AjoutDocumentState();
 }
@@ -30,7 +32,9 @@ class _AjoutDocumentState extends State<AjoutDocument> {
   bool emptyField = true;
   bool selected = true;
   var pdf;
+  String pdfPath;
   String pdfUrl;
+
   bool isCharging = false;
   List<S2Choice<String>> optionsFiliere = [];
   String semestre = '';
@@ -63,7 +67,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
     uploadImage.click();
     uploadImage.onChange.listen((event) async {
       var file = uploadImage.files.first;
-
+      pdfPath = basename(file.name);
       final reader = FileReader();
       reader.readAsArrayBuffer(file);
       reader.onLoad.listen((event) {
@@ -88,19 +92,13 @@ class _AjoutDocumentState extends State<AjoutDocument> {
       });
       var future = await firestore().collection('Document').get();
 
-      print('after query');
-
       future.docs.forEach((element) {
         if (titreController.text == element.data()['titre'].toString() &&
             annee == element.data()['annee'].toString() &&
             filiere == element.data()['filiere'].toString()) return 'exist';
-
-        print('${element.data()['titre'].toString()}');
       });
 
-      var ref = FirebaseStorage.instance
-          .ref()
-          .child('Document/${titreController.text}');
+      var ref = FirebaseStorage.instance.ref().child('Document/$pdfPath');
 
       var uploadTask = ref.putData(pdf);
       await uploadTask.whenComplete(() async {
@@ -118,7 +116,17 @@ class _AjoutDocumentState extends State<AjoutDocument> {
         'filiere': filiere,
       };
 
-      firestoreinstance.collection('Document').doc().set(document);
+      var doc = await firestoreinstance.collection('Document').add(document);
+      print(doc.id);
+      var information = {
+        'username': widget.user.nom,
+        'userimage': widget.user.image,
+        'documentID': doc.id,
+        'filiere': filiere,
+        'semestre': semestre,
+        'date': Timestamp.now(),
+      };
+      await firestoreinstance.collection('Notification').doc().set(information);
       setState(() {
         titreController.clear();
         moduleController.clear();

@@ -1,4 +1,5 @@
 //model de l'information
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:website_university/constantes/string.dart';
 import 'package:website_university/services/variableStatic.dart';
@@ -24,12 +25,26 @@ List<String> listMenu = [
 
 ///////
 class Information {
-  Utilisateur user;
-  String description;
-  Document document;
-  String date;
-
-  Information({this.user, this.description, this.document, this.date});
+  String username;
+  String userimage;
+  String filiere;
+  String semestre;
+  String documentID;
+  DateTime date;
+  // Information.fromMap(Map<String, dynamic> data) {
+  //   userID = data['userID'];
+  //   filiere = data['filiere'];
+  //   documentID = data['documentID'];
+  //   date = data['date'];
+  //   semestre = data['semestre'];
+  // }
+  Information(
+      {this.username,
+      this.userimage,
+      this.documentID,
+      this.date,
+      this.semestre,
+      this.filiere});
 }
 
 //model discution
@@ -97,16 +112,6 @@ Document d = Document(
       'C\'est le deuxième chapitre concernant les essentiels de Flutter',
 );
 
-Information info = Information(
-    user: user,
-    document: d,
-    date: '14h:03 | 12-04-2020',
-    description: 'Nouveau fiche de cours');
-Information info2 = Information(
-    user: user,
-    document: d,
-    date: '16h:03 | 17-04-2020',
-    description: 'Support du cours');
 Message m = Message(
     user: user, date: '04h:50 09/12/2020', message: 'Coucou tout le monde');
 Message m2 = Message(
@@ -114,16 +119,6 @@ Message m2 = Message(
     date: '07h:50 19/12/2020',
     message: 'Salut fhfhdn fdjfdfjfdjfdjf vhjdjfdfdjfjdb bmdjjdjfjdfjdf');
 
-List<Information> listInfo = [
-  info,
-  info2,
-  info,
-  info2,
-  info2,
-  info,
-  info2,
-  info
-];
 List<Message> listMessages = [
   m2,
   m,

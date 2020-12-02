@@ -88,11 +88,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         //elevation: 20.0,
 
         backgroundColor: Colors.white,
-        title: (MediaQuery.of(context).size.width >= 810)
+        title: (MediaQuery.of(context).size.width >= 930)
             ? navBarPC()
             : navBarMobile(),
         actions: [
-          (MediaQuery.of(context).size.width <= 810)
+          (MediaQuery.of(context).size.width <= 930)
               ? Builder(
                   builder: (context) => IconButton(
                     alignment: Alignment.center,
@@ -118,7 +118,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
       ),
       endDrawer:
-          (MediaQuery.of(context).size.width <= 810) ? menuMobile() : null,
+          (MediaQuery.of(context).size.width <= 940) ? menuMobile() : null,
       floatingActionButton: user.admin ? ajout() : null,
     );
   }
@@ -153,7 +153,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
-                          Get.to(AjoutDocument());
+                          Get.to(AjoutDocument(user));
                         },
                       )),
                   SizedBox(
@@ -296,7 +296,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ? Expanded(
                 flex: 2,
                 child: Container(
-                  child: Notifications(false),
+                  child: Notifications(false, user),
                 ),
               )
             : Container(
