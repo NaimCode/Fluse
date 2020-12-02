@@ -526,18 +526,37 @@ class _SplashState extends State<Splash> {
                         width: (MediaQuery.of(context).size.width <= 340)
                             ? 240.0
                             : 290.0,
-                        child: TextFormField(
-                          controller: password,
-                          obscureText: true,
-                          decoration: new InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: 'Mot de passe'),
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            TextFormField(
+                              controller: password,
+                              obscureText: obscure ? true : false,
+                              decoration: new InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
+                                  hintText: 'Mot de passe'),
+                            ),
+                            IconButton(
+                              alignment: Alignment.centerRight,
+                              onPressed: () {
+                                setState(() {
+                                  obscure = !obscure;
+                                });
+                              },
+                              icon: obscure
+                                  ? Icon(
+                                      Icons.visibility,
+                                      size: 20,
+                                    )
+                                  : Icon(Icons.visibility_off, size: 20),
+                            )
+                          ],
                         ),
                       ),
                     ],

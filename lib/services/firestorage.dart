@@ -50,6 +50,13 @@ getright2() async {
   return url;
 }
 
+getprofile() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/profile.png");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
 Future getAssets() async {
   try {
     logo = await getLogo();
@@ -59,6 +66,7 @@ Future getAssets() async {
     left2 = await getleft2();
     right1 = await getright1();
     right2 = await getright2();
+    profile = await getprofile();
     return 'finish';
   } catch (e) {
     print(e);

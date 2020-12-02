@@ -23,8 +23,6 @@ import 'package:website_university/services/variableStatic.dart';
 //import '../main.dart';
 
 class Home extends StatefulWidget {
-  Utilisateur user;
-  Home({this.user});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -37,7 +35,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool addClose = true;
   double add = 0.0;
   /////User//////////
-  Usere user = Usere(nom: 'Naim Abdelkerim', admin: true, image: avatar2);
+  Utilisateur user;
+
   //Index pour le navBar
   String selectItemNav = 'Etablissements';
 
@@ -83,6 +82,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    user = context.watch<Utilisateur>();
     return Scaffold(
       appBar: AppBar(
         //elevation: 20.0,
@@ -91,6 +91,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         title: (MediaQuery.of(context).size.width >= 810)
             ? navBarPC()
             : navBarMobile(),
+        actions: [
+          (MediaQuery.of(context).size.width <= 810)
+              ? Builder(
+                  builder: (context) => IconButton(
+                    alignment: Alignment.center,
+                    icon: Icon(
+                      Icons.menu,
+                      size: 35,
+                    ),
+                    onPressed: () => Scaffold.of(context).openEndDrawer(),
+                    tooltip: 'Menu',
+                  ),
+                )
+              : Container(),
+          SizedBox(
+            width: 20,
+          )
+        ],
       ),
       body: Container(
         child: Column(
@@ -98,7 +116,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             Expanded(child: Container(child: bodyPC())),
             (MediaQuery.of(context).size.width >= 810)
                 ? Container()
-                : bottomNav(),
+                : bottomNav(user),
           ],
         ),
       ),
@@ -192,6 +210,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Drawer menuMobile() {
     return Drawer(
+      semanticLabel: 'Menu',
       child: Container(
         child: Column(
           children: [
@@ -294,7 +313,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ? Expanded(
                 flex: 2,
                 child: Container(
-                  child: Discussion(false),
+                  child: Discussion(false, user),
                 ),
               )
             : Container(height: 0.0),
@@ -473,7 +492,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     ),
                     (Get.width >= 1200)
                         ? Text(
-                            widget.user.nom,
+                            user.nom,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               color: Colors.purple[900],

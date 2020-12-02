@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:website_university/services/variableStatic.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class Discussion extends StatefulWidget {
   bool isMobile;
-  Discussion(this.isMobile);
+  Utilisateur user;
+  Discussion(this.isMobile, this.user);
   @override
   _DiscussionState createState() => _DiscussionState();
 }
@@ -16,9 +18,10 @@ class _DiscussionState extends State<Discussion> {
   String channel = 'Global';
 
   List<Message> listMessage;
-  Usere user = Usere(nom: 'Naim Abdelkerim', admin: true, image: avatar);
+  Utilisateur user;
   @override
   void initState() {
+    user = widget.user;
     listMessage = listMessages;
     super.initState();
   }
@@ -110,7 +113,7 @@ class _DiscussionState extends State<Discussion> {
                                     : Radius.circular(0.0),
                               ),
                             ),
-                            elevation: 0.0,
+                            elevation: 3.0,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -228,16 +231,7 @@ class _DiscussionState extends State<Discussion> {
               alignment: Alignment.center,
               tooltip: 'Envoyer',
               icon: Icon(Icons.send),
-              onPressed: () {
-                Message m = Message(
-                  user: user,
-                  message: messageText.text,
-                  date: '06h:09 | 12-5-22',
-                );
-                setState(() {
-                  listMessage.add(m);
-                });
-              },
+              onPressed: () {},
             )
           ],
         ),

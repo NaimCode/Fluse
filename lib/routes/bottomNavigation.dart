@@ -1,12 +1,14 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:get/get.dart';
 import 'package:website_university/routes/discussion.dart';
 import 'package:website_university/routes/notifications.dart';
+import 'package:website_university/constantes/model.dart';
 
-bottomNav() {
+bottomNav(Utilisateur user) {
   return Container(
     color: Colors.white,
     alignment: Alignment.bottomCenter,
@@ -63,7 +65,7 @@ bottomNav() {
               ),
               child: FlatButton(
                 onPressed: () {
-                  Get.to(Discussion(true));
+                  Get.to(Discussion(true, user));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),

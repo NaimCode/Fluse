@@ -24,7 +24,7 @@ List<String> listMenu = [
 
 ///////
 class Information {
-  Usere user;
+  Utilisateur user;
   String description;
   Document document;
   String date;
@@ -34,7 +34,7 @@ class Information {
 
 //model discution
 class Message {
-  Usere user;
+  Utilisateur user;
   String date;
   String message;
   Message({this.user, this.date, this.message});
@@ -96,16 +96,7 @@ Document d = Document(
   description:
       'C\'est le deuxième chapitre concernant les essentiels de Flutter',
 );
-Usere user = Usere(
-  nom: 'Naim Abdelkerim',
-  admin: true,
-  image: avatar,
-);
-Usere user2 = Usere(
-  nom: 'Ali',
-  admin: false,
-  image: avatar2,
-);
+
 Information info = Information(
     user: user,
     document: d,
@@ -168,7 +159,19 @@ class Utilisateur {
   String semestre;
   String universite;
   bool admin;
+
   Utilisateur.fromMap(Map<String, dynamic> data) {
+    nom = data['nom'];
+    uid = data['ville'];
+    image = data['image'];
+    email = data['email'];
+    password = data['password'];
+    filiere = data['filiere'];
+    semestre = data['semestre'];
+    universite = data['universite'];
+    admin = data['admin'];
+  }
+  Utilisateur.fromDoc(var data) {
     nom = data['nom'];
     uid = data['ville'];
     image = data['image'];
@@ -190,3 +193,24 @@ class Utilisateur {
       this.image,
       this.admin});
 }
+
+Utilisateur user = Utilisateur(
+    nom: 'Naim',
+    uid: 'blabla',
+    image: profile,
+    email: 'naim@gmail',
+    password: '12345',
+    filiere: null,
+    semestre: null,
+    universite: null,
+    admin: true);
+Utilisateur user2 = Utilisateur(
+    nom: 'Ali',
+    uid: 'fDaxcT1p5XY9UyvrT05DRbcYlrA2',
+    image: avatar2,
+    email: 'naim@gmail',
+    password: '12345',
+    filiere: null,
+    semestre: null,
+    universite: null,
+    admin: false);

@@ -11,6 +11,7 @@ import 'package:website_university/routes/pages/ajoutEtablissement.dart';
 import 'package:website_university/routes/pages/ajoutdocument.dart';
 import 'package:website_university/services/authentification.dart';
 import 'package:website_university/services/firestorage.dart';
+import 'package:website_university/services/variableStatic.dart';
 import 'package:website_university/splash.dart';
 import 'package:provider/provider.dart';
 
@@ -77,17 +78,21 @@ class FluseWebsite extends StatelessWidget {
                   if (doc.hasData) {
                     var user = doc.data;
                     print(user['nom']);
+
                     Utilisateur utilisateur = Utilisateur(
                         nom: user['nom'],
-                        image: user['image'],
+                        image: user['image'] ?? profile,
                         email: user['email'],
                         password: user['password'],
-                        filiere: user['filiere'] ?? 'SMI',
-                        semestre: user['semestre'] ?? 'SMI',
+                        filiere: user['filiere'],
+                        semestre: user['semestre'],
                         admin: user['admin'],
-                        universite: user['universite'] ?? 'SMI',
+                        universite: user['universite'],
                         uid: user['uid']);
-                    return Home(user: utilisateur);
+                    return ProxyProvider0(
+                      update: (_, __) => utilisateur,
+                      child: Home(),
+                    );
                   } else
                     return Center(
                       child: Text('Erreur, veuillez raffraichir la page'),
