@@ -36,7 +36,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
   String pdfUrl;
 
   bool isCharging = false;
-  List<S2Choice<String>> optionsFiliere = [];
+
   String semestre = '';
   String annee = '';
   List<S2Choice<String>> temp = [];
@@ -158,7 +158,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: future,
+      //future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();

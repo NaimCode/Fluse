@@ -143,6 +143,13 @@ List<S2Choice<String>> optionsAnnee = [
   S2Choice<String>(value: '2012-2013', title: '2012-2013'),
   S2Choice<String>(value: '2011-2012', title: '2011-2012'),
 ];
+List<S2Choice<String>> optionsFiliere = [
+  S2Choice<String>(value: 'SMI', title: 'SMI'),
+  S2Choice<String>(value: 'Droit', title: 'Droit'),
+  S2Choice<String>(value: 'Economie', title: 'Economie'),
+  S2Choice<String>(value: 'SMPC', title: 'SMPC'),
+  S2Choice<String>(value: 'SVU', title: 'SVU'),
+];
 
 class Utilisateur {
   String uid;

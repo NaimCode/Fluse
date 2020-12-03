@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,8 @@ import 'package:website_university/routes/notifications.dart';
 import 'package:website_university/routes/pages/support.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:website_university/routes/profile.dart';
+import 'package:website_university/services/authentification.dart';
 import 'package:website_university/services/firestorage.dart';
 import 'package:website_university/services/variableStatic.dart';
 
@@ -38,7 +41,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Utilisateur user;
 
   //Index pour le navBar
-  String selectItemNav = 'Etablissements';
+  String selectItemNav = 'Profile';
 
   //Variable pour 'responsive'
 
@@ -62,6 +65,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         break;
       case 'Documents':
         return Documents();
+
+        break;
+      case 'Profile':
+        return Profile();
 
         break;
       default:
@@ -554,5 +561,87 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  Widget popMenu(Widget profile) {
+    return PopupMenuButton(
+        tooltip: 'Plus',
+        child: profile,
+        onSelected: (value) async {
+          switch (value) {
+            case 1:
+              setState(() {
+                selectItemNav = 'Profile';
+              });
+              break;
+            case 3:
+              Get.defaultDialog(
+                  title: 'Déconnexion',
+                  middleText: 'Vous êtes sur point de vous déconnecter !',
+                  actions: [
+                    FlatButton(
+                      onPressed: () async {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Annuler',
+                        style: TextStyle(color: primary, fontFamily: 'Didac'),
+                      ),
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    FlatButton(
+                      onPressed: () async {
+                        Get.back();
+                        await Authentification(FirebaseAuth.instance)
+                            .deconnection();
+                      },
+                      child: Text(
+                        'Se déconnecter',
+                        style:
+                            TextStyle(color: Colors.white, fontFamily: 'Didac'),
+                      ),
+                      color: primary,
+                    )
+                  ]);
+              break;
+            default:
+          }
+        },
+        itemBuilder: (context) => [
+              PopupMenuItem(
+                  value: 1,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                        child: Icon(Icons.person),
+                      ),
+                      Text('Mon compte')
+                    ],
+                  )),
+              PopupMenuItem(
+                  value: 2,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                          child: Icon(Icons.settings)),
+                      Text('Paramètre')
+                    ],
+                  )),
+              PopupMenuItem(
+                  value: 3,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                          child: Icon(Icons.exit_to_app)),
+                      Text('Se déconnecter')
+                    ],
+                  )),
+            ]);
   }
 }

@@ -9,6 +9,7 @@ import 'package:website_university/routes/home.dart';
 
 import 'package:website_university/routes/pages/ajoutEtablissement.dart';
 import 'package:website_university/routes/pages/ajoutdocument.dart';
+import 'package:website_university/routes/profile.dart';
 import 'package:website_university/services/authentification.dart';
 import 'package:website_university/services/firestorage.dart';
 import 'package:website_university/services/variableStatic.dart';
