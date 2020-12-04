@@ -57,6 +57,20 @@ getprofile() async {
   return url;
 }
 
+getfacebook() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/facebook.png");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getgoogle() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/google.png");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
 Future getAssets() async {
   try {
     logo = await getLogo();
@@ -67,6 +81,8 @@ Future getAssets() async {
     right1 = await getright1();
     right2 = await getright2();
     profile = await getprofile();
+    googleLogo = await getgoogle();
+    facebookLogo = await getfacebook();
     return 'finish';
   } catch (e) {
     print(e);

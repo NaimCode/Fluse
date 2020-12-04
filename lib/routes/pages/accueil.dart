@@ -30,12 +30,7 @@ class _AccueilState extends State<Accueil> {
                 child: Card(
                   elevation: 10.0,
                   color: Colors.amber[900],
-                  child: Center(
-                    child: FloatingActionButton(
-                      onPressed: incrementCounter,
-                      child: Icon(Icons.add),
-                    ),
-                  ),
+                  child: Center(),
                 ),
               ),
             ),

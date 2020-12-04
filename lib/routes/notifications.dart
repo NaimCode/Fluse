@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:hover_effect/hover_effect.dart';
@@ -24,6 +25,8 @@ class _NotificationsState extends State<Notifications> {
   List listNotifications = [];
   List listInitiale = [];
   List list = [];
+  bool detail = false;
+
   Utilisateur utilisateur;
   var filiere;
   var semestre;
@@ -81,14 +84,16 @@ class _NotificationsState extends State<Notifications> {
             filiere = user['filiere'];
             semestre = user['semestre'];
             list.clear();
+
             listNotifications.forEach((element) {
-              if (element.filiere == filiere && element.semestre == semestre)
+              if (element.filiere == filiere && element.semestre == semestre) {
                 list.add(element);
+              }
             });
           }
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: (Get.width <= 810) ? Colors.white : backColor,
+              backgroundColor: backColor,
               //check
               title: Tooltip(
                 message: 'Notifications',
@@ -99,7 +104,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
               centerTitle: true,
-              elevation: (Get.width >= 810) ? 0.0 : 10.0,
+              elevation: 0.0,
               leading: widget.isMobile
                   ? IconButton(
                       icon: Icon(
@@ -283,29 +288,79 @@ class _NotificationsState extends State<Notifications> {
       child: Column(
         children: [
           Text(
-            filiere,
+            'Nouveau document',
             style: TextStyle(fontFamily: 'Ubuntu'),
           ),
           SizedBox(
             height: 10.0,
           ),
-          RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            color: primary,
-            onPressed: () {},
-            icon: Icon(
-              Icons.article,
-              color: Colors.white,
-            ),
-            label: Text(
-              'Afficher',
-              style: TextStyle(
-                fontFamily: 'Didac',
-                color: Colors.white,
-              ),
-            ),
+          InkWell(
+            onTap: () {
+              detail = !detail;
+            },
+            child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                color: primary,
+                child: Column(
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Icon(Icons.article, color: Colors.white),
+                          Text('Afficher',
+                              style: TextStyle(
+                                fontFamily: 'Didac',
+                                color: Colors.white,
+                              )),
+                          Icon(
+                            Icons.expand_more,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: detail ? 100.0 : 0.0,
+                      color: Colors.red,
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('Document')
+                              .doc(list[index].documentID)
+                              .snapshots(),
+                          builder: (context, snapDoc) {
+                            Document doc;
+                            if (snapDoc.connectionState ==
+                                ConnectionState.waiting) return chargement();
+                            if (snapDoc.hasData) {
+                              var d = snapDoc.data;
+                              doc = Document(
+                                annee: d['annee'],
+                                titre: d['titre'],
+                                module: d['module'],
+                                urlPDF: d['url'],
+                                semestre: d['semestre'],
+                                description: d['description'],
+                                filiere: d['filiere'],
+                              );
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  children: [
+                                    Text('Titre:'),
+                                    SelectableText(doc.titre)
+                                  ],
+                                )
+                              ],
+                            );
+                          }),
+                    )
+                  ],
+                )),
           )
         ],
       ),

@@ -6,3 +6,5 @@ var left2;
 var right1;
 var right2;
 var profile;
+var facebookLogo;
+var googleLogo;

@@ -39,27 +39,6 @@ class _AjoutDocumentState extends State<AjoutDocument> {
 
   String semestre = '';
   String annee = '';
-  List<S2Choice<String>> temp = [];
-  getFiliere() async {
-    print('debut query');
-
-    var future = await firestore().collection('Filiere').get();
-    //var future = await fb.firestore().collection('Etablissement').get();
-    print('after query');
-
-    future.docs.forEach((element) {
-      S2Choice<String> model = S2Choice<String>(
-          value: element.data()['nom'].toString(),
-          title: element.data()['nom'].toString());
-      temp.add(model);
-      print('${element.data()['nom'].toString()}');
-    });
-    setState(() {
-      optionsFiliere = temp;
-    });
-
-    return 'Complete';
-  }
 
   choisirDoc() {
     InputElement uploadImage = FileUploadInputElement()
@@ -117,7 +96,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
       };
 
       var doc = await firestoreinstance.collection('Document').add(document);
-      print(doc.id);
+
       var information = {
         'username': widget.user.nom,
         'userimage': widget.user.image,
@@ -131,7 +110,6 @@ class _AjoutDocumentState extends State<AjoutDocument> {
         titreController.clear();
         moduleController.clear();
         descController.clear();
-
         pdf = null;
         selected = false;
         isCharging = false;
@@ -147,7 +125,6 @@ class _AjoutDocumentState extends State<AjoutDocument> {
 
   @override
   void initState() {
-    future = getFiliere();
     // TODO: implement initState
     super.initState();
   }
@@ -201,6 +178,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
                               elevation: 1.0,
                               child: optionsFiliere.isNotEmpty
                                   ? SmartSelect<String>.single(
+                                      modalType: S2ModalType.bottomSheet,
                                       placeholder: '',
                                       title: 'Choisir une filière',
                                       value: filiere,
@@ -217,6 +195,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
                             Material(
                                 elevation: 1.0,
                                 child: SmartSelect<String>.single(
+                                    modalType: S2ModalType.bottomSheet,
                                     placeholder: '',
                                     title: 'Choisir un semestre',
                                     value: semestre,
@@ -231,6 +210,7 @@ class _AjoutDocumentState extends State<AjoutDocument> {
                             Material(
                                 elevation: 1.0,
                                 child: SmartSelect<String>.single(
+                                    modalType: S2ModalType.bottomSheet,
                                     placeholder: '',
                                     title: 'Choisir une année',
                                     value: annee,
@@ -242,48 +222,48 @@ class _AjoutDocumentState extends State<AjoutDocument> {
                             SizedBox(
                               height: 10,
                             ),
-                            Builder(
-                              builder: (context) => FloatingActionButton(
-                                tooltip: 'Ajouter',
-                                onPressed: () async {
-                                  var check = await uploadDocument();
-
-                                  if (check == 'erreur')
-                                    Get.rawSnackbar(
-                                        title: 'Ajout d\'un document',
-                                        message:
-                                            'Erreur, vérifiez que vous avez saisi tous les champs!',
-                                        icon: Icon(
-                                          Icons.error,
-                                          color: Colors.red,
-                                        ));
-                                  if (check == 'succes')
-                                    Get.rawSnackbar(
-                                        title: 'Ajout d\'un document',
-                                        message: 'Le document a été ajouté',
-                                        icon: Icon(
-                                          Icons.verified,
-                                          color: Colors.white,
-                                        ));
-                                  if (check == 'exist')
-                                    Get.rawSnackbar(
-                                        title: 'Ajout d\'un document',
-                                        message: 'Le document existe déjà',
-                                        icon: Icon(
-                                          Icons.error_sharp,
-                                          color: Colors.yellow,
-                                        ));
-                                },
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                ),
-                                backgroundColor: primary,
-                              ),
-                            ),
                           ],
                         ),
                       )),
+                ),
+                floatingActionButton: Builder(
+                  builder: (context) => FloatingActionButton(
+                    tooltip: 'Ajouter',
+                    onPressed: () async {
+                      var check = await uploadDocument();
+
+                      if (check == 'erreur')
+                        Get.rawSnackbar(
+                            title: 'Ajout d\'un document',
+                            message:
+                                'Erreur, vérifiez que vous avez saisi tous les champs!',
+                            icon: Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            ));
+                      if (check == 'succes')
+                        Get.rawSnackbar(
+                            title: 'Ajout d\'un document',
+                            message: 'Le document a été ajouté',
+                            icon: Icon(
+                              Icons.verified,
+                              color: Colors.white,
+                            ));
+                      if (check == 'exist')
+                        Get.rawSnackbar(
+                            title: 'Ajout d\'un document',
+                            message: 'Le document existe déjà',
+                            icon: Icon(
+                              Icons.error_sharp,
+                              color: Colors.yellow,
+                            ));
+                    },
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: primary,
+                  ),
                 ),
               );
       },

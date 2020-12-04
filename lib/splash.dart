@@ -49,6 +49,9 @@ class _SplashState extends State<Splash> {
   bool erreurMail = false;
   bool connectable = true;
   connexionVerif() async {
+     setState(() {
+      isCharging = true;
+    });
     if (!mail.text.isEmail) {
       setState(() {
         erreurMail = true;
@@ -60,14 +63,14 @@ class _SplashState extends State<Splash> {
       Get.rawSnackbar(
           title: 'Connexion',
           message: check,
-          icon: (check == 'Connexion réussi')
+          icon: (check == 'Connexion réussi, ravis de vous revoir')
               ? Icon(Icons.verified, color: Colors.white)
               : Icon(
                   Icons.error_sharp,
                   color: Colors.red,
                 ));
       switch (check) {
-        case 'Connexion réussi':
+        case 'Connexion réussi, ravis de vous revoir':
           //go home
           break;
         case 'L\'Email est incorrect':
@@ -84,6 +87,9 @@ class _SplashState extends State<Splash> {
         default:
       }
     }
+     setState(() {
+      isCharging = false;
+    });
   }
 
   /////////////////
@@ -96,30 +102,35 @@ class _SplashState extends State<Splash> {
   bool erreurNomE = false;
   bool connectableE = true;
   enregistrementVerif() async {
-    print('debut');
     setState(() {
       isCharging = true;
     });
     if (!mailE.text.isEmail) {
+      Get.rawSnackbar(
+          title: 'Enregistrement',
+          message: 'L\'Email est incorrect',
+          icon: Icon(
+            Icons.error_sharp,
+            color: Colors.red,
+          ));
       setState(() {
         erreurMailE = true;
       });
     } else {
-      print('check debut');
       var check = await context.read<Authentification>().enregistrementAuth(
           mailE.text.trim(), passwordE.text.trim(), nomE.text.trim());
       Get.rawSnackbar(
           title: 'Enregistrement',
           message: check,
           icon: Icon(
-            (check == 'Enregistrement réussi')
+            (check == 'Enregistrement réussi, bienvenue à vous')
                 ? Icon(Icons.verified, color: Colors.white)
                 : Icons.error_sharp,
             color: Colors.red,
           ));
 
       switch (check) {
-        case 'Enregistrement réussi':
+        case 'Enregistrement réussi, bienvenue à vous':
 
           //go home
           break;
@@ -141,8 +152,10 @@ class _SplashState extends State<Splash> {
           break;
         default:
       }
-      print('switch fin');
     }
+     setState(() {
+      isCharging = false;
+    });
   }
 
   @override
@@ -177,9 +190,8 @@ class _SplashState extends State<Splash> {
                 Expanded(
                   flex: 4,
                   child: SingleChildScrollView(
-                    child: isCharging
-                        ? chargement()
-                        : (selectItemNav != 'se connecter')
+                    child: 
+                         (selectItemNav != 'se connecter')
                             ? enregistrement()
                             : connexion(),
                   ),
@@ -381,8 +393,8 @@ class _SplashState extends State<Splash> {
                       Tooltip(
                         message: 'Facebook',
                         child: FlatButton(
-                          child: Image.asset(
-                            'facebook.png',
+                          child: Image.network(
+                            facebookLogo,
                             height: 40,
                             width: 40,
                           ),
@@ -395,8 +407,8 @@ class _SplashState extends State<Splash> {
                       Tooltip(
                         message: 'Google',
                         child: FlatButton(
-                          child: Image.asset(
-                            'google.png',
+                          child: Image.network(
+                            googleLogo,
                             height: 40,
                             width: 40,
                           ),
@@ -414,7 +426,7 @@ class _SplashState extends State<Splash> {
                         style: TextStyle(fontFamily: 'Didac', fontSize: 12)),
                   ),
                 ),
-                Container(
+                isCharging?chargement():Container(
                   padding: EdgeInsets.only(top: 20.0),
                   child: Tooltip(
                     message: 'Valider',
@@ -613,7 +625,7 @@ class _SplashState extends State<Splash> {
                     ),
                   ),
                 ),
-                Container(
+                isCharging?chargement():Container(
                   padding: EdgeInsets.only(top: 20.0),
                   child: Tooltip(
                     message: 'Valider',

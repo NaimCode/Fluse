@@ -49,10 +49,10 @@ class Information {
 
 //model discution
 class Message {
-  Utilisateur user;
+  String userID;
   String date;
   String message;
-  Message({this.user, this.date, this.message});
+  Message({this.userID, this.date, this.message});
 }
 
 //model de l'utilisateur
@@ -105,24 +105,12 @@ Document d = Document(
   annee: '2020-2021',
   module: 'Programmation',
   titre: 'Chapitre 2: langage Dart',
-  universite: 'Ibn Tofail',
   semestre: 'S5',
   filiere: 'SMI',
   description:
       'C\'est le deuxième chapitre concernant les essentiels de Flutter',
 );
 
-Message m = Message(
-    user: user, date: '04h:50 09/12/2020', message: 'Coucou tout le monde');
-Message m2 = Message(
-    user: user2,
-    date: '07h:50 19/12/2020',
-    message: 'Salut fhfhdn fdjfdfjfdjfdjf vhjdjfdfdjfjdb bmdjjdjfjdfjdf');
-
-List<Message> listMessages = [
-  m2,
-  m,
-];
 List<S2Choice<String>> optionsSemestre = [
   S2Choice<String>(value: 'S1', title: 'S1'),
   S2Choice<String>(value: 'S2', title: 'S2'),
@@ -144,6 +132,14 @@ List<S2Choice<String>> optionsAnnee = [
   S2Choice<String>(value: '2011-2012', title: '2011-2012'),
 ];
 List<S2Choice<String>> optionsFiliere = [
+  S2Choice<String>(value: 'SMI', title: 'SMI'),
+  S2Choice<String>(value: 'Droit', title: 'Droit'),
+  S2Choice<String>(value: 'Economie', title: 'Economie'),
+  S2Choice<String>(value: 'SMPC', title: 'SMPC'),
+  S2Choice<String>(value: 'SVU', title: 'SVU'),
+];
+List<S2Choice<String>> optionsChannel = [
+  S2Choice<String>(value: 'Global', title: 'Global'),
   S2Choice<String>(value: 'SMI', title: 'SMI'),
   S2Choice<String>(value: 'Droit', title: 'Droit'),
   S2Choice<String>(value: 'Economie', title: 'Economie'),

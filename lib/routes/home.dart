@@ -41,7 +41,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Utilisateur user;
 
   //Index pour le navBar
-  String selectItemNav = 'Profile';
+  String selectItemNav = 'Home';
 
   //Variable pour 'responsive'
 
@@ -190,20 +190,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ],
               ),
             ),
-            Tooltip(
-              message: 'Ajouter un document ou un établissement',
-              child: FloatingActionButton(
-                onPressed: () {
-                  addClose = !addClose;
-                  setState(() {
-                    (add == 0.0) ? add = 30.0 : add = 0.0;
-                  });
-                },
-                child: Icon(
-                  (add == 0.0) ? Icons.add : Icons.close,
-                  size: 35,
-                  color: Colors.white,
-                ),
+            FloatingActionButton(
+              heroTag: null,
+              tooltip:
+                  addClose ? 'Ajouter un document ou un établissement' : null,
+              onPressed: () {
+                addClose = !addClose;
+                setState(() {
+                  (add == 0.0) ? add = 30.0 : add = 0.0;
+                });
+              },
+              child: Icon(
+                (add == 0.0) ? Icons.add : Icons.close,
+                size: 35,
+                color: Colors.white,
               ),
             ),
           ],

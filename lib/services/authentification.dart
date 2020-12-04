@@ -37,7 +37,7 @@ class Authentification {
             .collection('Utilisateur')
             .doc(user.user.uid)
             .set(utilisateurs);
-        return 'Enregistrement réussi';
+        return 'Enregistrement réussi, bienvenue à vous';
       } catch (e) {
         return 'L\'Email est invalide';
       }
@@ -57,7 +57,7 @@ class Authentification {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail, password: password);
-      return 'Connexion réussi';
+      return 'Connexion réussi, ravis de vous revoir';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return 'L\'Email est incorrect';

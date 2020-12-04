@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:smart_select/smart_select.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
+import 'package:website_university/constantes/widget.dart';
 import 'package:website_university/services/variableStatic.dart';
 import 'package:provider/provider.dart';
 
@@ -9,34 +13,58 @@ import 'package:provider/provider.dart';
 class Discussion extends StatefulWidget {
   bool isMobile;
   Utilisateur user;
+
   Discussion(this.isMobile, this.user);
   @override
   _DiscussionState createState() => _DiscussionState();
 }
 
 class _DiscussionState extends State<Discussion> {
+  final firestoreinstance = FirebaseFirestore.instance;
   String channel = 'Global';
+  List<Message> listMessage = [];
 
-  List<Message> listMessage;
-  Utilisateur user;
+  bool errorSending = false;
   @override
   void initState() {
-    user = widget.user;
-    listMessage = listMessages;
+    //listMessage = listMessages;
     super.initState();
   }
 
+  bool sending = false;
   TextEditingController messageText = TextEditingController();
 //
-  List<String> listChannel = [
-    'Global',
-    'SMAI',
-    'STU',
-    'SMPC',
-    'Droit',
-    'Ali',
-    'Economie'
-  ];
+  sendMessage(String channelF, String utilisateurID) async {
+    if (messageText.text.isNotEmpty) {
+      setState(() {
+        sending = true;
+      });
+      var message = {
+        'userID': utilisateurID,
+        'message': messageText.text,
+        'date': Timestamp.now(),
+      };
+
+      try {
+        await firestoreinstance
+            .collection('Discussion')
+            .doc(channelF)
+            .collection('Message')
+            .add(message);
+        setState(() {
+          messageText.clear();
+        });
+      } on Exception catch (e) {
+        setState(() {
+          errorSending = true;
+        });
+      }
+      setState(() {
+        sending = false;
+      });
+    }
+  }
+
 //Animation
   double heightChannel = 0.0;
   @override
@@ -47,8 +75,8 @@ class _DiscussionState extends State<Discussion> {
     return Scaffold(
       backgroundColor: backColor,
       appBar: AppBar(
-        elevation: (Get.width >= 810) ? 0.0 : 10.0,
-        backgroundColor: (Get.width <= 810) ? Colors.white : backColor,
+        elevation: (Get.width >= 810) ? 0.0 : 0.0,
+        backgroundColor: backColor,
         //check
         title: Tooltip(
           message: 'Discussions',
@@ -76,58 +104,95 @@ class _DiscussionState extends State<Discussion> {
           color: backColor,
           child: Container(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 channelFunction(),
                 Expanded(
                   child: Container(
-                    // height: Get.width - 500,
-                    child: ListView.builder(
-                      reverse: true,
-                      itemCount: listMessage.length,
-                      itemBuilder: (context, index) {
-                        bool isUser = (listMessage[index].user.nom == user.nom);
+                    height: Get.width - 500,
+                    child: StreamBuilder(
+                        stream: firestoreinstance
+                            .collection('Discussion')
+                            .doc(channel)
+                            .collection('Message')
+                            .orderBy('date', descending: false)
+                            .snapshots(),
+                        builder: (context, snapMess) {
+                          if (snapMess.connectionState ==
+                              ConnectionState.waiting)
+                            return SpinKitThreeBounce(
+                              color: primary,
+                              size: 20,
+                            );
+                          if (snapMess.connectionState == ConnectionState.none)
+                            return Center(
+                              child: Text('Pas de connexion'),
+                            );
+                          if (snapMess.hasError) print('erreur');
+                          if (!snapMess.hasData) {
+                            print(snapMess.data);
+                            print('pas de message');
+                            return Center(
+                              child: Text('Aucun message'),
+                            );
+                          } else {
+                            print('debut message');
+                            listMessage.clear();
+                            snapMess.data.docs.forEach((element) {
+                              listMessage.add(Message(
+                                  date: element.data()['date'],
+                                  userID: element.data()['userID'],
+                                  message: element.data()['message']));
+                            });
+                            return ListView.builder(
+                              reverse: true,
+                              itemCount: listMessage.length,
+                              itemBuilder: (context, index) {
+                                bool isUser = (listMessage[index].userID ==
+                                    widget.user.uid);
 
-                        return Container(
-                          margin: EdgeInsets.only(
-                              left: isUser
-                                  ? widget.isMobile
-                                      ? 100.0
-                                      : 30
-                                  : 0.0,
-                              right: !isUser
-                                  ? widget.isMobile
-                                      ? 100.0
-                                      : 30
-                                  : 0.0),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30),
-                                bottomLeft: !isUser
-                                    ? Radius.circular(0.0)
-                                    : Radius.circular(30),
-                                bottomRight: !isUser
-                                    ? Radius.circular(30.0)
-                                    : Radius.circular(0.0),
-                              ),
-                            ),
-                            elevation: 3.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  userSection(index),
-                                  contentSection(index),
-                                  dateSection(index, isUser)
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                      left: isUser
+                                          ? widget.isMobile
+                                              ? 100.0
+                                              : 30
+                                          : 0.0,
+                                      right: !isUser
+                                          ? widget.isMobile
+                                              ? 100.0
+                                              : 30
+                                          : 0.0),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                        bottomLeft: !isUser
+                                            ? Radius.circular(0.0)
+                                            : Radius.circular(30),
+                                        bottomRight: !isUser
+                                            ? Radius.circular(30.0)
+                                            : Radius.circular(0.0),
+                                      ),
+                                    ),
+                                    elevation: 3.0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          userSection(index),
+                                          contentSection(index),
+                                          dateSection(index, isUser)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        }),
                   ),
                 ),
                 inputMessage()
@@ -137,67 +202,20 @@ class _DiscussionState extends State<Discussion> {
     );
   }
 
-  FlatButton channelFunction() {
-    return FlatButton(
-      onPressed: () {
-        double check = heightChannel;
-        setState(() {
-          (check == 80) ? heightChannel = 0.0 : heightChannel = 80.0;
-        });
-      },
-      child: Card(
-        elevation: 0.0,
-        child: Column(
-          children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(channel,
-                      style: TextStyle(
-                          fontFamily: 'Ubuntu', fontSize: 18, color: primary)),
-                  Icon(Icons.expand_more),
-                ],
-              ),
-            ),
-            AnimatedContainer(
-              //width: double.infinity / 3,
-              height: heightChannel,
-              duration: Duration(seconds: 1),
-              curve: Curves.linearToEaseOut,
-              child: Container(
-                child: ListView.builder(
-                  itemCount: listChannel.length,
-                  itemBuilder: (context, index) {
-                    if (listChannel[index] != channel)
-                      return InkWell(
-                        onTap: () {
-                          Get.snackbar('Changement de serveur',
-                              'Vous êtes actuellement sur le serveur de discussion \'${listChannel[index]}\'');
-                          setState(() {
-                            heightChannel = 0.0;
-                            channel = listChannel[index];
-                          });
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              listChannel[index],
-                            ),
-                            Text(''),
-                          ],
-                        ),
-                      );
-                    else
-                      return Container();
-                  },
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+  Widget channelFunction() {
+    return Card(
+      elevation: 8.0,
+      color: Colors.white,
+      child: SmartSelect<String>.single(
+          modalType: S2ModalType.bottomSheet,
+          placeholder: '',
+          title: 'Serveur de discussion',
+          value: channel,
+          choiceItems: optionsChannel,
+          onChange: (state) {
+            setState(() => channel = state.value);
+            print('$channel  a ete selectionne');
+          }),
     );
   }
 
@@ -227,12 +245,15 @@ class _DiscussionState extends State<Discussion> {
                 ),
               ),
             ),
-            IconButton(
-              alignment: Alignment.center,
-              tooltip: 'Envoyer',
-              icon: Icon(Icons.send),
-              onPressed: () {},
-            )
+            sending
+                ? chargement()
+                : IconButton(
+                    alignment: Alignment.center,
+                    tooltip: 'Envoyer',
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      sendMessage(channel, widget.user.uid);
+                    })
           ],
         ),
       ),
@@ -251,59 +272,70 @@ class _DiscussionState extends State<Discussion> {
 
   Container userSection(int index) {
     return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            //                    <--- top side
-            color: backColor,
+      child: StreamBuilder<QueryDocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('Utilisateur')
+              .doc(listMessage[index].userID)
+              .snapshots(),
+          builder: (context, snapUser) {
+            var user;
+            if (snapUser.hasData) user = snapUser.data;
+            return Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    //                    <--- top side
+                    color: backColor,
 
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.spaceBetween,
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(listMessage[index].user.image),
+                    width: 1.0,
+                  ),
                 ),
               ),
-              SizedBox(
-                width: 12.0,
-              ),
-              Text(
-                listMessage[index].user.nom,
-                style: TextStyle(
-                    fontFamily: 'Poppins',
-                    color: Colors.purple,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14),
-              ),
-            ],
-          ),
-          listMessage[index].user.admin
-              ? Tooltip(
-                  message: 'Administrateur',
-                  child: Icon(
-                    Icons.star_purple500_outlined,
-                    color: Colors.amber,
-                    size: 20,
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4.0),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(user['image']),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 12.0,
+                      ),
+                      Text(
+                        user['nom'],
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.purple,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                      ),
+                    ],
                   ),
-                )
-              : IconButton(
-                  icon: Icon(Icons.more_horiz),
-                  onPressed: () {},
-                )
-        ],
-      ),
+                  user['admin']
+                      ? Tooltip(
+                          message: 'Administrateur',
+                          child: Icon(
+                            Icons.star_purple500_outlined,
+                            color: Colors.amber,
+                            size: 20,
+                          ),
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.more_horiz),
+                          onPressed: () {},
+                        )
+                ],
+              ),
+            );
+          }),
     );
   }
 

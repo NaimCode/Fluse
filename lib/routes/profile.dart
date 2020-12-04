@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
   String filiere;
   bool isCharging = false;
   bool nomExist = false;
+
   //Controller
   TextEditingController nomController = TextEditingController();
   TextEditingController universiteController = TextEditingController();
@@ -64,7 +65,9 @@ class _ProfileState extends State<Profile> {
     //   }
     // });
 
-    var ref = FirebaseStorage.instance.ref().child('Document/$imagePath');
+    var ref = FirebaseStorage.instance
+        .ref()
+        .child('Utilisateur/${user.uid}_$imagePath');
 
     if (image != null) {
       var uploadTask = ref.putData(image);
@@ -463,7 +466,7 @@ class _ProfileState extends State<Profile> {
               child: modify
                   ? SmartSelect<String>.single(
                       modalType: S2ModalType.bottomSheet,
-                      placeholder: semestre ?? '',
+                      placeholder: filiere ?? '',
                       title: 'Choisir une filière',
                       value: filiere ?? '',
                       choiceItems: optionsFiliere,
