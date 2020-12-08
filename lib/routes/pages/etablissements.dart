@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:website_university/constantes/widget.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Etablissements extends StatefulWidget {
   @override
@@ -76,6 +78,7 @@ class _EtablissementsState extends State<Etablissements> {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: searchBar(),
           body: grid(),
         );
@@ -97,13 +100,8 @@ class _EtablissementsState extends State<Etablissements> {
         : Scrollbar(
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: GridView.builder(
+                child: ListView.builder(
                   itemCount: listEtablissement.length,
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: ((Get.width <= 1000 && Get.width > 810) ||
-                              (Get.width < 600))
-                          ? 1
-                          : 2),
                   itemBuilder: (context, index) {
                     // String image = snapshot.data.docs[index].data()['image'];
                     // String nom = snapshot.data.docs[index].data()['nom'];
@@ -112,72 +110,62 @@ class _EtablissementsState extends State<Etablissements> {
                     //     snapshot.data.docs[index].data()['description'];
                     // String lien = snapshot.data.docs[index].data()['lien'];
 
-                    return Tooltip(
-                      message: 'Afficher plus de détail',
-                      child: InkWell(
-                        hoverColor: primary,
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            color: primary,
-                            elevation: 8.8,
-                            child: Container(
-                              child: Stack(
-                                alignment: Alignment.bottomLeft,
-                                children: [
-                                  Container(
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    child: Image.network(
-                                      listEtablissement[index].image,
-                                      // height: ((Get.width <= 1000 && Get.width > 810) ||
-                                      //         (Get.width < 600))
-                                      //     ? 200
-                                      //     : 50.0,
-                                      fit: BoxFit.cover,
-                                    ),
+                    return ListTile(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => NetworkGiffyDialog(
+                                  image: Image.network(
+                                    listEtablissement[index].image,
+                                    fit: BoxFit.cover,
                                   ),
-                                  Container(
-                                    color: primary.withOpacity(0.5),
-                                    height: 100,
-                                    width: double.infinity,
-                                    padding:
-                                        EdgeInsets.only(left: 8.0, bottom: 8.0),
-                                    child: Scrollbar(
-                                      // controller: scrollModel,
-                                      // isAlwaysShown: true,
-                                      child: ListView(
-                                        children: [
-                                          Text(
-                                            listEtablissement[index].nom,
-                                            style: TextStyle(
-                                                fontFamily: 'Ubuntu',
-                                                fontSize: 29,
-                                                color: Colors.white),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            listEtablissement[index].ville,
-                                            style: TextStyle(
-                                                fontFamily: 'Ubuntu',
-                                                fontSize: 18,
-                                                color: Colors.white70),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  title: Text(
+                                      '${listEtablissement[index].nom}, ${listEtablissement[index].ville}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 22.0,
+                                          fontWeight: FontWeight.w600)),
+                                  description: Text(
+                                    listEtablissement[index].description,
+                                    textAlign: TextAlign.center,
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                                  entryAnimation: EntryAnimation.BOTTOM,
+                                  onOkButtonPressed: () async {
+                                    await launch(
+                                        'https://${listEtablissement[index].lien}');
+                                  },
+                                  buttonOkText: Text(
+                                    'Site internet',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Ubuntu',
+                                        fontSize: 18),
+                                  ),
+                                  buttonOkColor: primary,
+                                  buttonCancelColor: Colors.white,
+                                  buttonCancelText: Text('Retour',
+                                      style: TextStyle(
+                                          color: primary,
+                                          fontFamily: 'Tomorrow',
+                                          fontSize: 18)),
+                                ));
+                      },
+                      leading: Image.network(
+                        listEtablissement[index].image,
+                        width: (Get.width <= 410) ? 100 : 200,
+                        fit: BoxFit.cover,
+                      ),
+                      title: Text(
+                        listEtablissement[index].nom,
+                        style: TextStyle(
+                            fontSize: 20, fontFamily: 'Ubuntu', color: primary),
+                      ),
+                      subtitle: Text(
+                        listEtablissement[index].ville,
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontFamily: 'Ubuntu',
+                            color: primary.withOpacity(0.8)),
                       ),
                     );
                   },
@@ -199,7 +187,7 @@ class _EtablissementsState extends State<Etablissements> {
             border: Border.all(
               //                    <--- top side
               color: backColor,
-              width: 3.0,
+              width: 2.0,
             ),
           ),
           height: 50,

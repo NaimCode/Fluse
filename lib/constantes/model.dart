@@ -6,20 +6,11 @@ import 'package:website_university/services/variableStatic.dart';
 
 import '../main.dart';
 
-//App
-class Assets {
-  String logo;
-  String avatar1;
-  String avatar2;
-  Assets({this.logo, this.avatar1, this.avatar2});
-}
-
 //// Menu
 List<String> listMenu = [
   'Etablissements',
   'Documents',
   'Home',
-  'Support',
   'Contact',
 ];
 
@@ -50,7 +41,7 @@ class Information {
 //model discution
 class Message {
   String userID;
-  String date;
+  Timestamp date;
   String message;
   Message({this.userID, this.date, this.message});
 }
@@ -191,24 +182,3 @@ class Utilisateur {
       this.image,
       this.admin});
 }
-
-Utilisateur user = Utilisateur(
-    nom: 'Naim',
-    uid: 'blabla',
-    image: profile,
-    email: 'naim@gmail',
-    password: '12345',
-    filiere: null,
-    semestre: null,
-    universite: null,
-    admin: true);
-Utilisateur user2 = Utilisateur(
-    nom: 'Ali',
-    uid: 'fDaxcT1p5XY9UyvrT05DRbcYlrA2',
-    image: avatar2,
-    email: 'naim@gmail',
-    password: '12345',
-    filiere: null,
-    semestre: null,
-    universite: null,
-    admin: false);

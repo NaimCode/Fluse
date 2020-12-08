@@ -15,12 +15,13 @@ import 'package:website_university/services/firestorage.dart';
 import 'package:website_university/services/variableStatic.dart';
 import 'package:website_university/splash.dart';
 import 'package:provider/provider.dart';
-
+import 'package:timeago/timeago.dart';
 import 'constantes/widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
@@ -60,8 +61,8 @@ class FluseWebsite extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return chargement();
-        if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data);
+        if (snapshot.connectionState == ConnectionState.none) {
+          return erreurChargement('Erreur de connexion');
         }
         return StreamBuilder<User>(
             stream: firebaseUser.authStateChanges,
@@ -80,6 +81,18 @@ class FluseWebsite extends StatelessWidget {
                     builder: (context, doc) {
                       if (doc.connectionState == ConnectionState.waiting)
                         return chargement();
+                      if (doc.connectionState == ConnectionState.none)
+                        return erreurChargement('Erreur de connexion');
+                      if (doc.hasError) {
+                        Get.rawSnackbar(
+                            title: 'Erreur',
+                            message: '',
+                            icon: Icon(
+                              Icons.error_sharp,
+                              color: Colors.red,
+                            ));
+                        Authentification(FirebaseAuth.instance).deconnection();
+                      }
                       if (doc.hasData) {
                         var user = doc.data;
                         print(user['nom']);

@@ -2,12 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
+import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:website_university/constantes/widget.dart';
 import 'package:website_university/services/variableStatic.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 // ignore: must_be_immutable
 class Discussion extends StatefulWidget {
@@ -27,6 +31,7 @@ class _DiscussionState extends State<Discussion> {
   bool errorSending = false;
   @override
   void initState() {
+    timeago.setLocaleMessages('fr', timeago.FrMessages());
     //listMessage = listMessages;
     super.initState();
   }
@@ -72,20 +77,23 @@ class _DiscussionState extends State<Discussion> {
     if (MediaQuery.of(context).size.width > 810 && widget.isMobile == true) {
       Navigator.pop(context);
     }
+    initializeDateFormatting();
     return Scaffold(
       backgroundColor: backColor,
       appBar: AppBar(
-        elevation: (Get.width >= 810) ? 0.0 : 0.0,
-        backgroundColor: backColor,
+        elevation: (Get.width >= 810) ? 0.0 : 5.0,
+        backgroundColor: (Get.width <= 810) ? Colors.white : backColor,
         //check
-        title: Tooltip(
-          message: 'Discussions',
-          child: Icon(
-            Icons.comment,
-            size: 35,
-            color: primary,
-          ),
-        ),
+        title: (Get.width <= 810)
+            ? channelFunction()
+            : Tooltip(
+                message: 'Discussions',
+                child: Icon(
+                  Icons.comment,
+                  size: 35,
+                  color: primary,
+                ),
+              ),
         centerTitle: true,
 
         leading: widget.isMobile
@@ -106,7 +114,7 @@ class _DiscussionState extends State<Discussion> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                channelFunction(),
+                if (Get.width >= 810) channelFunction(),
                 Expanded(
                   child: Container(
                     height: Get.width - 500,
@@ -115,15 +123,15 @@ class _DiscussionState extends State<Discussion> {
                             .collection('Discussion')
                             .doc(channel)
                             .collection('Message')
-                            .orderBy('date', descending: false)
+                            .orderBy('date', descending: true)
                             .snapshots(),
                         builder: (context, snapMess) {
-                          if (snapMess.connectionState ==
-                              ConnectionState.waiting)
-                            return SpinKitThreeBounce(
-                              color: primary,
-                              size: 20,
-                            );
+                          // if (snapMess.connectionState ==
+                          //     ConnectionState.waiting)
+                          //   return SpinKitThreeBounce(
+                          //     color: primary,
+                          //     size: 20,
+                          //   );
                           if (snapMess.connectionState == ConnectionState.none)
                             return Center(
                               child: Text('Pas de connexion'),
@@ -178,7 +186,12 @@ class _DiscussionState extends State<Discussion> {
                                     ),
                                     elevation: 3.0,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.only(
+                                        top: 8.0,
+                                        left: 8.0,
+                                        right: 8.0,
+                                        bottom: 0.0,
+                                      ),
                                       child: Column(
                                         children: [
                                           userSection(index),
@@ -204,7 +217,7 @@ class _DiscussionState extends State<Discussion> {
 
   Widget channelFunction() {
     return Card(
-      elevation: 8.0,
+      elevation: 0.0,
       color: Colors.white,
       child: SmartSelect<String>.single(
           modalType: S2ModalType.bottomSheet,
@@ -219,122 +232,131 @@ class _DiscussionState extends State<Discussion> {
     );
   }
 
-  Padding inputMessage() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
-      child: Card(
-        elevation: 8.0,
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: TextField(
-                  controller: messageText,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      contentPadding: EdgeInsets.only(
-                          left: 15, bottom: 16, top: 11, right: 15),
-                      hintText: 'Message...'),
-                ),
+  Widget inputMessage() {
+    return Card(
+      elevation: 8.0,
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: TextField(
+                controller: messageText,
+                keyboardType: TextInputType.multiline,
+                //maxLines: 3,
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.only(
+                        left: 15, bottom: 16, top: 11, right: 15),
+                    hintText: 'Message...'),
               ),
             ),
-            sending
-                ? chargement()
-                : IconButton(
-                    alignment: Alignment.center,
-                    tooltip: 'Envoyer',
-                    icon: Icon(Icons.send),
-                    onPressed: () {
-                      sendMessage(channel, widget.user.uid);
-                    })
-          ],
-        ),
+          ),
+          sending
+              ? chargement()
+              : IconButton(
+                  alignment: Alignment.center,
+                  tooltip: 'Envoyer',
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    sendMessage(channel, widget.user.uid);
+                  })
+        ],
       ),
     );
   }
 
-  Container dateSection(int index, bool isUser) {
-    return Container(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Text(
-        listMessage[index].date,
-        style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
+  Widget dateSection(int index, bool isUser) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Tooltip(
+        message:
+            'Envoyé le ${DateFormat.yMMMMd('fr').format(listMessage[index].date.toDate())} à ${DateFormat.Hm().format(listMessage[index].date.toDate())}',
+        child: Container(
+          alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+          child: Text(
+            timeago.format(listMessage[index].date.toDate(), locale: 'fr'),
+            style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
+          ),
+        ),
       ),
     );
   }
 
   Container userSection(int index) {
     return Container(
-      child: StreamBuilder<QueryDocumentSnapshot>(
-          stream: FirebaseFirestore.instance
+      child: FutureBuilder(
+          future: FirebaseFirestore.instance
               .collection('Utilisateur')
               .doc(listMessage[index].userID)
-              .snapshots(),
+              .get(),
           builder: (context, snapUser) {
             var user;
-            if (snapUser.hasData) user = snapUser.data;
-            return Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    //                    <--- top side
-                    color: backColor,
 
-                    width: 1.0,
+            if (snapUser.hasData) {
+              user = snapUser.data;
+              return Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      //                    <--- top side
+                      color: backColor,
+
+                      width: 1.0,
+                    ),
                   ),
                 ),
-              ),
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                alignment: WrapAlignment.spaceBetween,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4.0),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(user['image']),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12.0,
-                      ),
-                      Text(
-                        user['nom'],
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: Colors.purple,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  user['admin']
-                      ? Tooltip(
-                          message: 'Administrateur',
-                          child: Icon(
-                            Icons.star_purple500_outlined,
-                            color: Colors.amber,
-                            size: 20,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  alignment: WrapAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(user['image'] ?? profile),
                           ),
-                        )
-                      : IconButton(
-                          icon: Icon(Icons.more_horiz),
-                          onPressed: () {},
-                        )
-                ],
-              ),
-            );
+                        ),
+                        SizedBox(
+                          width: 12.0,
+                        ),
+                        Text(
+                          user['nom'],
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.purple,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    user['admin']
+                        ? Tooltip(
+                            message: 'Administrateur',
+                            child: Icon(
+                              Icons.star_purple500_outlined,
+                              color: Colors.amber,
+                              size: 20,
+                            ),
+                          )
+                        : IconButton(
+                            icon: Icon(Icons.more_horiz),
+                            onPressed: () {},
+                          )
+                  ],
+                ),
+              );
+            } else
+              return Container();
           }),
     );
   }

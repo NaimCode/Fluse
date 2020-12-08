@@ -16,6 +16,20 @@ Container chargement() {
   );
 }
 
+Widget erreurChargement(String erreur) {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    body: Container(
+      child: Center(
+        child: Text(
+          erreur,
+          style: TextStyle(fontSize: 16, color: Colors.redAccent),
+        ),
+      ),
+    ),
+  );
+}
+
 final snackBarEtablissment = SnackBar(
     content: Row(
   mainAxisAlignment: MainAxisAlignment.spaceBetween,

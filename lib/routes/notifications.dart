@@ -8,8 +8,12 @@ import 'package:website_university/constantes/model.dart';
 import 'package:hover_effect/hover_effect.dart';
 import 'package:website_university/constantes/widget.dart';
 import 'package:website_university/routes/home.dart';
+import 'package:website_university/services/service.dart';
 import 'package:website_university/services/variableStatic.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 // ignore: must_be_immutable
 class Notifications extends StatefulWidget {
@@ -26,13 +30,14 @@ class _NotificationsState extends State<Notifications> {
   List listInitiale = [];
   List list = [];
   bool detail = false;
-
+  String pdfurl;
   Utilisateur utilisateur;
   var filiere;
   var semestre;
   var future;
   @override
   void initState() {
+    timeago.setLocaleMessages('fr', timeago.FrMessages());
     filiere = widget.user.filiere;
     semestre = widget.user.semestre;
     future = getNotification();
@@ -70,6 +75,7 @@ class _NotificationsState extends State<Notifications> {
     if (MediaQuery.of(context).size.width > 810 && widget.isMobile == true) {
       Navigator.pop(context);
     }
+    initializeDateFormatting();
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('Utilisateur')
@@ -78,6 +84,8 @@ class _NotificationsState extends State<Notifications> {
         builder: (context, snapshot) {
           // if (snapshot.connectionState == ConnectionState.waiting)
           //   return chargement();
+          if (snapshot.connectionState == ConnectionState.none)
+            return erreurChargement('Erreur de connexion');
           if (snapshot.hasData) {
             var user = snapshot.data;
 
@@ -157,7 +165,8 @@ class _NotificationsState extends State<Notifications> {
                         builder: (context, snap) {
                           if (snap.connectionState == ConnectionState.waiting)
                             return chargement();
-
+                          if (snap.connectionState == ConnectionState.none)
+                            return erreurChargement('Erreur de connexion');
                           return Scrollbar(
                             child: list.isNotEmpty
                                 ? ListView.builder(
@@ -252,21 +261,12 @@ class _NotificationsState extends State<Notifications> {
   Widget dateSection(int index) {
     return Tooltip(
       message:
-          'Ajouté le ${DateFormat.yMd().format(list[index].date)} à ${DateFormat.Hm().format(list[index].date)}',
+          'Ajouté le ${DateFormat.yMMMMd('fr').format(list[index].date)} à ${DateFormat.Hm().format(list[index].date)}',
       child: Container(
-        alignment: Alignment.centerRight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              DateFormat.yMd().format(list[index].date),
-              style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
-            ),
-            Text(
-              DateFormat.Hm().format(list[index].date),
-              style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
-            ),
-          ],
+        alignment: Alignment.centerLeft,
+        child: Text(
+          timeago.format(list[index].date, locale: 'fr'),
+          style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
         ),
       ),
     );
@@ -294,75 +294,121 @@ class _NotificationsState extends State<Notifications> {
           SizedBox(
             height: 10.0,
           ),
-          InkWell(
-            onTap: () {
-              detail = !detail;
-            },
-            child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                color: primary,
-                child: Column(
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Icon(Icons.article, color: Colors.white),
-                          Text('Afficher',
-                              style: TextStyle(
-                                fontFamily: 'Didac',
-                                color: Colors.white,
-                              )),
-                          Icon(
-                            Icons.expand_more,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: detail ? 100.0 : 0.0,
-                      color: Colors.red,
-                      child: StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('Document')
-                              .doc(list[index].documentID)
-                              .snapshots(),
-                          builder: (context, snapDoc) {
-                            Document doc;
-                            if (snapDoc.connectionState ==
-                                ConnectionState.waiting) return chargement();
-                            if (snapDoc.hasData) {
-                              var d = snapDoc.data;
-                              doc = Document(
-                                annee: d['annee'],
-                                titre: d['titre'],
-                                module: d['module'],
-                                urlPDF: d['url'],
-                                semestre: d['semestre'],
-                                description: d['description'],
-                                filiere: d['filiere'],
-                              );
-                            }
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Wrap(
-                                  children: [
-                                    Text('Titre:'),
-                                    SelectableText(doc.titre)
-                                  ],
-                                )
-                              ],
-                            );
-                          }),
-                    )
-                  ],
+          RaisedButton.icon(
+            color: primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            icon: Icon(Icons.article, color: Colors.white),
+            label: Text('Afficher',
+                style: TextStyle(
+                  fontFamily: 'Didac',
+                  color: Colors.white,
                 )),
+            onPressed: () {
+              dialogDocument(index).show();
+            },
           )
         ],
+      ),
+    );
+  }
+
+  Alert dialogDocument(int index) {
+    return Alert(
+      buttons: [
+        DialogButton(
+            child: Text('TELECHARGER',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                )),
+            onPressed: () {
+              if (pdfurl != null) downloadFile(pdfurl);
+              Navigator.pop(context);
+            })
+      ],
+      closeIcon: Icon(Icons.close),
+      context: context,
+      title: "DOCUMENT",
+      content: Container(
+        padding: EdgeInsets.only(left: 10),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('Document')
+                .doc(list[index].documentID)
+                .snapshots(),
+            builder: (context, snapDoc) {
+              Document doc;
+              if (snapDoc.connectionState == ConnectionState.waiting)
+                return chargement();
+              if (snapDoc.connectionState == ConnectionState.none)
+                return erreurChargement('Erreur de connexion');
+              if (snapDoc.hasData) {
+                var d = snapDoc.data;
+                doc = Document(
+                  annee: d['annee'],
+                  titre: d['titre'],
+                  module: d['module'],
+                  urlPDF: d['url'],
+                  semestre: d['semestre'],
+                  description: d['description'],
+                  filiere: d['filiere'],
+                );
+
+                pdfurl = doc.urlPDF;
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Divider(
+                    color: backColor,
+                    thickness: 0.0,
+                  ),
+                  SelectableText(doc.titre,
+                      style: TextStyle(
+                        fontFamily: 'Didac',
+                        // color: Colors.green,
+                      )),
+                  Divider(
+                    color: backColor,
+                    thickness: 1,
+                  ),
+                  SelectableText(doc.filiere,
+                      style: TextStyle(
+                        fontFamily: 'Didac',
+                      )),
+                  Divider(
+                    color: backColor,
+                    thickness: 1,
+                  ),
+                  SelectableText(doc.semestre,
+                      style: TextStyle(
+                        fontFamily: 'Didac',
+                        //color: Colors.blue,
+                      )),
+                  Divider(
+                    color: backColor,
+                    thickness: 1,
+                  ),
+                  SelectableText(doc.module,
+                      style: TextStyle(
+                        fontFamily: 'Didac',
+                        //color: Colors.amber,
+                      )),
+                  Divider(
+                    color: backColor,
+                    thickness: 1,
+                  ),
+                  SelectableText(doc.description,
+                      style: TextStyle(
+                        fontFamily: 'Didac',
+                        //color: Colors.purple,
+                      )),
+                ],
+              );
+            }),
       ),
     );
   }

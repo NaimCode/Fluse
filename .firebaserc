@@ -1,10 +1,13 @@
 {
   "projects": {
-    "default": "hostingtest-bc313",
+    "default": "hosting-f8fee",
     "y": "sitetesthosting",
     "hostingWeb": "websitetesthosting",
     "ss": "hostingaaa",
     "premierhosting": "premierhosting-9dc41",
-    "hosting": "hosting-f8fee"
+    "hosting": "hosting-f8fee",
+    "fdfd": "hostingaaa",
+    "jj": "hosting-f8fee",
+    "jjj": "hosting-f8fee"
   }
 }

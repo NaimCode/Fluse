@@ -22,6 +22,7 @@ import 'package:website_university/routes/profile.dart';
 import 'package:website_university/services/authentification.dart';
 import 'package:website_university/services/firestorage.dart';
 import 'package:website_university/services/variableStatic.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 //import '../main.dart';
 
@@ -44,6 +45,43 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String selectItemNav = 'Home';
 
   //Variable pour 'responsive'
+  Icon iconNav(bool selected, String item) {
+    switch (item) {
+      case 'Home':
+        return Icon(
+          Icons.home_outlined,
+          size: 30,
+          color: selected ? primary : primary.withOpacity(0.7),
+        );
+
+        break;
+      case 'Etablissements':
+        return Icon(
+          Icons.school_outlined,
+          size: 30,
+          color: selected ? primary : primary.withOpacity(0.7),
+        );
+
+        break;
+      case 'Contact':
+        return Icon(
+          Icons.contact_mail_outlined,
+          size: 30,
+          color: selected ? primary : primary.withOpacity(0.7),
+        );
+
+        break;
+      case 'Documents':
+        return Icon(
+          Icons.article_outlined,
+          size: 30,
+          color: selected ? primary : primary.withOpacity(0.7),
+        );
+
+        break;
+      default:
+    }
+  }
 
   Widget selectBody(String body) {
     switch (body) {
@@ -218,78 +256,90 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       child: Container(
         child: Column(
           children: [
-            Container(
-              height: 300,
-              margin: EdgeInsets.only(bottom: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: Image.network(
-                        user.image,
-                        fit: BoxFit.fill,
-                        height: 300,
+            Tooltip(
+              message: 'Profil',
+              child: InkWell(
+                hoverColor: primary,
+                onTap: () {
+                  setState(() {
+                    selectItemNav = 'Profile';
+                  });
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  height: 250,
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          child: Image.network(
+                            user.image,
+                            fit: BoxFit.fill,
+                            // height: 250,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    color: primary,
-                    child: Center(
-                      child: Text(
-                        '${user.nom}',
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            color: Colors.white,
-                            fontSize: 20.0),
+                      Container(
+                        width: double.infinity,
+                        color: primary,
+                        child: Center(
+                          child: Text(
+                            '${user.nom}',
+                            style: TextStyle(
+                                fontFamily: 'Ubuntu',
+                                color: Colors.white,
+                                fontSize: 20.0),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             Expanded(
-              child: Center(
+              child: Container(
                 child: ListView.builder(
-                  itemCount: listMenu.length,
-                  itemBuilder: (context, index) {
-                    return Material(
-                      child: InkWell(
-                        // onHover: (hover) {
-                        //   setState(() {
-                        //     hover ? elevation = 20 : elevation = 0.0;
-                        //   });
-                        // },
+                    itemCount: listMenu.length,
+                    itemBuilder: (context, index) {
+                      bool selectedItem = (listMenu[index] == selectItemNav);
+                      return InkWell(
                         onTap: () {
                           setState(() {
                             selectItemNav = listMenu[index];
                           });
                           Navigator.pop(context);
                         },
-                        child: Card(
-                          elevation: 0.0,
-                          color: Colors.grey[900].withOpacity(0.0),
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            child: Center(
-                              child: (listMenu[index] != 'Home')
-                                  ? Text(
-                                      listMenu[index],
-                                      style: TextStyle(
-                                          fontFamily: 'Ubuntu', fontSize: 20.0),
-                                    )
-                                  : Icon(Icons.home,
-                                      color: primary, size: 35.0),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                iconNav(selectedItem, listMenu[index]),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  (listMenu[index]=='Home')?'Accueil':listMenu[index],
+                                  style: TextStyle(
+                                      fontFamily: 'Tomorrow',
+                                      fontSize: 16,
+                                      color: selectedItem
+                                          ? primary
+                                          : primary.withOpacity(0.7)),
+                                )
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    }),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -577,7 +627,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             case 3:
               Get.defaultDialog(
                   title: 'Déconnexion',
-                  middleText: 'Vous êtes sur point de vous déconnecter !',
+                  middleText: 'Vous êtes sur point de vous déconnecter!',
                   actions: [
                     FlatButton(
                       onPressed: () async {
@@ -622,16 +672,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       Text('Mon compte')
                     ],
                   )),
-              PopupMenuItem(
-                  value: 2,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-                          child: Icon(Icons.settings)),
-                      Text('Paramètre')
-                    ],
-                  )),
+              // PopupMenuItem(
+              //     value: 2,
+              //     child: Row(
+              //       children: <Widget>[
+              //         Padding(
+              //             padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+              //             child: Icon(Icons.settings)),
+              //         Text('Paramètre')
+              //       ],
+              //     )),
               PopupMenuItem(
                   value: 3,
                   child: Row(
