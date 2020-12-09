@@ -146,32 +146,35 @@ class _DiscussionState extends State<Discussion> {
                                   userID: element.data()['userID'],
                                   message: element.data()['message']));
                             });
-                            return ListView.builder(
-                              reverse: true,
-                              itemCount: listMessage.length,
-                              itemBuilder: (context, index) {
-                                bool isUser = (listMessage[index].userID ==
-                                    widget.user.uid);
+                            return Scrollbar(
+                              child: ListView.builder(
+                                reverse: true,
+                                itemCount: listMessage.length,
+                                itemBuilder: (context, index) {
+                                  bool isUser = (listMessage[index].userID ==
+                                      widget.user.uid);
 
-                                return ListTile(
-                                  subtitle: MessageSection(
-                                      isUser: isUser,
-                                      listMessage: listMessage,
-                                      index: index),
-                                  title: (index == listMessage.length - 1)
-                                      ? UserSection(
-                                          listMessage: listMessage,
-                                          isUser: isUser,
-                                          index: index)
-                                      : (listMessage[index].userID ==
-                                              listMessage[index + 1].userID)
-                                          ? Container()
-                                          : UserSection(
-                                              listMessage: listMessage,
-                                              isUser: isUser,
-                                              index: index),
-                                );
-                              },
+                                  return ListTile(
+                                    subtitle: MessageSection(
+                                        isUser: isUser,
+                                        listMessage: listMessage,
+                                        index: index,
+                                        channel: channel),
+                                    title: (index == listMessage.length - 1)
+                                        ? UserSection(
+                                            listMessage: listMessage,
+                                            isUser: isUser,
+                                            index: index)
+                                        : (listMessage[index].userID ==
+                                                listMessage[index + 1].userID)
+                                            ? Container()
+                                            : UserSection(
+                                                listMessage: listMessage,
+                                                isUser: isUser,
+                                                index: index),
+                                  );
+                                },
+                              ),
                             );
                           }
                         }),

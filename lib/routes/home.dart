@@ -42,7 +42,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Utilisateur user;
 
   //Index pour le navBar
-  String selectItemNav = 'Home';
+  String selectItemNav = 'Documents';
 
   //Variable pour 'responsive'
   Icon iconNav(bool selected, String item) {
@@ -324,7 +324,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   width: 20,
                                 ),
                                 Text(
-                                  (listMenu[index]=='Home')?'Accueil':listMenu[index],
+                                  (listMenu[index] == 'Home')
+                                      ? 'Accueil'
+                                      : listMenu[index],
                                   style: TextStyle(
                                       fontFamily: 'Tomorrow',
                                       fontSize: 16,

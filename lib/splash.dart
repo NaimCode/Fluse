@@ -16,7 +16,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  String selectItemNav = 's\'enregistrer';
+  String selectItemNav = 'se connecter';
   bool obscure = true;
   bool isCharging = false;
 
@@ -49,7 +49,7 @@ class _SplashState extends State<Splash> {
   bool erreurMail = false;
   bool connectable = true;
   connexionVerif() async {
-     setState(() {
+    setState(() {
       isCharging = true;
     });
     if (!mail.text.isEmail) {
@@ -87,7 +87,7 @@ class _SplashState extends State<Splash> {
         default:
       }
     }
-     setState(() {
+    setState(() {
       isCharging = false;
     });
   }
@@ -153,7 +153,7 @@ class _SplashState extends State<Splash> {
         default:
       }
     }
-     setState(() {
+    setState(() {
       isCharging = false;
     });
   }
@@ -190,10 +190,9 @@ class _SplashState extends State<Splash> {
                 Expanded(
                   flex: 4,
                   child: SingleChildScrollView(
-                    child: 
-                         (selectItemNav != 'se connecter')
-                            ? enregistrement()
-                            : connexion(),
+                    child: (selectItemNav == 'se connecter')
+                        ? connexion()
+                        : enregistrement(),
                   ),
                 ),
                 //Right
@@ -426,28 +425,30 @@ class _SplashState extends State<Splash> {
                         style: TextStyle(fontFamily: 'Didac', fontSize: 12)),
                   ),
                 ),
-                isCharging?chargement():Container(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Tooltip(
-                    message: 'Valider',
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      color: primary,
-                      onPressed: enregistrementVerif,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 3.0, horizontal: 30.0),
-                        child: Icon(
-                          Icons.navigate_next,
-                          color: Colors.white,
-                          size: 35,
+                isCharging
+                    ? chargement()
+                    : Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Tooltip(
+                          message: 'Valider',
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: primary,
+                            onPressed: enregistrementVerif,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 3.0, horizontal: 30.0),
+                              child: Icon(
+                                Icons.navigate_next,
+                                color: Colors.white,
+                                size: 35,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                )
+                      )
               ],
             ),
           )
@@ -625,28 +626,30 @@ class _SplashState extends State<Splash> {
                     ),
                   ),
                 ),
-                isCharging?chargement():Container(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Tooltip(
-                    message: 'Valider',
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      color: primary,
-                      onPressed: connexionVerif,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 3.0, horizontal: 30.0),
-                        child: Icon(
-                          Icons.navigate_next,
-                          color: Colors.white,
-                          size: 35,
+                isCharging
+                    ? chargement()
+                    : Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Tooltip(
+                          message: 'Valider',
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: primary,
+                            onPressed: connexionVerif,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 3.0, horizontal: 30.0),
+                              child: Icon(
+                                Icons.navigate_next,
+                                color: Colors.white,
+                                size: 35,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                )
+                      )
               ],
             ),
           )
@@ -663,35 +666,6 @@ class _SplashState extends State<Splash> {
         child: Wrap(
           alignment: WrapAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                onPressed: () {
-                  setState(() {
-                    selectItemNav = 's\'enregistrer';
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        //                    <--- top side
-                        color: (selectItemNav == 's\'enregistrer')
-                            ? Colors.black
-                            : Colors.white,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  height: 30.0,
-                  child: Text(
-                    'S\'enregistrer',
-                    style: TextStyle(
-                        fontFamily: 'Tomorrow', fontSize: 20, color: primary),
-                  ),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FlatButton(
@@ -715,6 +689,35 @@ class _SplashState extends State<Splash> {
                   height: 30.0,
                   child: Text(
                     'Se connecter',
+                    style: TextStyle(
+                        fontFamily: 'Tomorrow', fontSize: 20, color: primary),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () {
+                  setState(() {
+                    selectItemNav = 's\'enregistrer';
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        //                    <--- top side
+                        color: (selectItemNav == 's\'enregistrer')
+                            ? Colors.black
+                            : Colors.white,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  height: 30.0,
+                  child: Text(
+                    'S\'enregistrer',
                     style: TextStyle(
                         fontFamily: 'Tomorrow', fontSize: 20, color: primary),
                   ),

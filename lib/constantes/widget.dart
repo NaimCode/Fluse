@@ -119,6 +119,7 @@ class UserSection extends StatelessWidget {
               onTap: () {
                 var filiere = user['filiere'] ?? 'filière indéfinie';
                 var semestre = user['semestre'] ?? 'semestre indéfini';
+                var isAdmin = user['admin'];
                 showDialog(
                     context: context,
                     builder: (_) => NetworkGiffyDialog(
@@ -129,11 +130,15 @@ class UserSection extends StatelessWidget {
                           title: Text(user['nom'],
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 22.0, fontWeight: FontWeight.w600)),
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 3)),
                           description: Text(
-                            '$filiere | $semestre',
+                            isAdmin ? 'Administrateur' : '$filiere | $semestre',
                             style: TextStyle(
-                                color: primary, fontSize: 18, letterSpacing: 3),
+                                color: isAdmin ? Colors.amber : primary,
+                                fontSize: 18,
+                                letterSpacing: 3),
                             textAlign: TextAlign.center,
                           ),
                           entryAnimation: EntryAnimation.BOTTOM,
@@ -163,7 +168,7 @@ class UserSection extends StatelessWidget {
                                   size: 15,
                                 ),
                               ),
-                            SelectableText(
+                            Text(
                               user['nom'],
                               style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -231,12 +236,14 @@ class MessageSection extends StatelessWidget {
       {Key key,
       @required this.isUser,
       @required this.listMessage,
-      @required this.index})
+      @required this.index,
+      @required this.channel})
       : super(key: key);
 
   final bool isUser;
   final List<Message> listMessage;
   final int index;
+  final String channel;
 
   @override
   Widget build(BuildContext context) {
@@ -253,14 +260,69 @@ class MessageSection extends StatelessWidget {
             decoration: BoxDecoration(
                 color: !isUser ? Colors.white : primary,
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(25.0),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(25.0),
+                  bottomRight: Radius.circular(25.0),
+                  topLeft:
+                      !isUser ? Radius.circular(0.0) : Radius.circular(25.0),
+                  topRight:
+                      !isUser ? Radius.circular(25.0) : Radius.circular(0.0),
                 )),
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 13),
-            child: SelectableText(
-              listMessage[index].message,
-              style: TextStyle(color: isUser ? Colors.white : primary),
-            ),
+            child: isUser
+                ? InkWell(
+                    onLongPress: () {
+                      Get.defaultDialog(
+                          title: 'Suppression',
+                          middleText: 'Voulez-vous supprimer ce message?',
+                          actions: [
+                            FlatButton(
+                              onPressed: () async {
+                                Get.back();
+                              },
+                              child: Text(
+                                'Annuler',
+                                style: TextStyle(
+                                    color: primary, fontFamily: 'Didac'),
+                              ),
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            FlatButton(
+                              onPressed: () async {
+                                var delete = FirebaseFirestore.instance
+                                    .collection('Discussion')
+                                    .doc(channel)
+                                    .collection('Message')
+                                    .where('date',
+                                        isEqualTo: listMessage[index].date);
+                                delete.get().then((value) {
+                                  value.docs.forEach((element) {
+                                    element.reference.delete();
+                                  });
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Supprimer',
+                                style: TextStyle(
+                                    color: Colors.white, fontFamily: 'Didac'),
+                              ),
+                              color: Colors.red,
+                            )
+                          ]);
+                    },
+                    child: Text(
+                      listMessage[index].message,
+                      style: TextStyle(color: isUser ? Colors.white : primary),
+                    ),
+                  )
+                : SelectableText(
+                    listMessage[index].message,
+                    style: TextStyle(color: isUser ? Colors.white : primary),
+                  ),
           ),
           (index == 0)
               ? Container(
