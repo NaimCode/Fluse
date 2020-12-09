@@ -41,9 +41,6 @@ class _DiscussionState extends State<Discussion> {
 //
   sendMessage(String channelF, String utilisateurID) async {
     if (messageText.text.isNotEmpty) {
-      setState(() {
-        sending = true;
-      });
       var message = {
         'userID': utilisateurID,
         'message': messageText.text,
@@ -64,9 +61,6 @@ class _DiscussionState extends State<Discussion> {
           errorSending = true;
         });
       }
-      setState(() {
-        sending = false;
-      });
     }
   }
 
@@ -117,7 +111,7 @@ class _DiscussionState extends State<Discussion> {
                 if (Get.width >= 810) channelFunction(),
                 Expanded(
                   child: Container(
-                    height: Get.width - 500,
+                    // height: Get.width - 500,
                     child: StreamBuilder(
                         stream: firestoreinstance
                             .collection('Discussion')
@@ -159,48 +153,23 @@ class _DiscussionState extends State<Discussion> {
                                 bool isUser = (listMessage[index].userID ==
                                     widget.user.uid);
 
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                      left: isUser
-                                          ? widget.isMobile
-                                              ? 100.0
-                                              : 30
-                                          : 0.0,
-                                      right: !isUser
-                                          ? widget.isMobile
-                                              ? 100.0
-                                              : 30
-                                          : 0.0),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(30),
-                                        topRight: Radius.circular(30),
-                                        bottomLeft: !isUser
-                                            ? Radius.circular(0.0)
-                                            : Radius.circular(30),
-                                        bottomRight: !isUser
-                                            ? Radius.circular(30.0)
-                                            : Radius.circular(0.0),
-                                      ),
-                                    ),
-                                    elevation: 3.0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 8.0,
-                                        left: 8.0,
-                                        right: 8.0,
-                                        bottom: 0.0,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          userSection(index),
-                                          contentSection(index),
-                                          dateSection(index, isUser)
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                return ListTile(
+                                  subtitle: MessageSection(
+                                      isUser: isUser,
+                                      listMessage: listMessage,
+                                      index: index),
+                                  title: (index == listMessage.length - 1)
+                                      ? UserSection(
+                                          listMessage: listMessage,
+                                          isUser: isUser,
+                                          index: index)
+                                      : (listMessage[index].userID ==
+                                              listMessage[index + 1].userID)
+                                          ? Container()
+                                          : UserSection(
+                                              listMessage: listMessage,
+                                              isUser: isUser,
+                                              index: index),
                                 );
                               },
                             );
@@ -283,104 +252,6 @@ class _DiscussionState extends State<Discussion> {
             style: TextStyle(fontFamily: 'Ubuntu', fontSize: 10),
           ),
         ),
-      ),
-    );
-  }
-
-  Container userSection(int index) {
-    return Container(
-      child: FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection('Utilisateur')
-              .doc(listMessage[index].userID)
-              .get(),
-          builder: (context, snapUser) {
-            var user;
-
-            if (snapUser.hasData) {
-              user = snapUser.data;
-              return Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      //                    <--- top side
-                      color: backColor,
-
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  alignment: WrapAlignment.spaceBetween,
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(user['image'] ?? profile),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12.0,
-                        ),
-                        Text(
-                          user['nom'],
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Colors.purple,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    user['admin']
-                        ? Tooltip(
-                            message: 'Administrateur',
-                            child: Icon(
-                              Icons.star_purple500_outlined,
-                              color: Colors.amber,
-                              size: 20,
-                            ),
-                          )
-                        : IconButton(
-                            icon: Icon(Icons.more_horiz),
-                            onPressed: () {},
-                          )
-                  ],
-                ),
-              );
-            } else
-              return Container();
-          }),
-    );
-  }
-
-  Container contentSection(int index) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            //                    <--- top side
-            color: backColor,
-
-            width: 1.0,
-          ),
-        ),
-      ),
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      child: Column(
-        children: [
-          Text(
-            listMessage[index].message,
-            style: TextStyle(fontFamily: 'Ubuntu'),
-          ),
-        ],
       ),
     );
   }
