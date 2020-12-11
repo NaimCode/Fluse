@@ -135,26 +135,11 @@ class _NotificationsState extends State<Notifications> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Pour accéder aux notifications, veuillez indiquer votre filière ainsi que le semestre',
+                            'Pour récevoir les notifications, veuillez indiquer votre filière ainsi que votre semestre',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 14, color: primary.withOpacity(0.7)),
+                                fontSize: 20, color: primary.withOpacity(0.8)),
                           ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          RaisedButton.icon(
-                            icon: Icon(
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              'Profile',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () {},
-                            color: primary,
-                          )
                         ],
                       ),
                     ))

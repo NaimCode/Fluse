@@ -42,7 +42,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Utilisateur user;
 
   //Index pour le navBar
-  String selectItemNav = 'Documents';
+  String selectItemNav = 'Etablissements';
 
   //Variable pour 'responsive'
   Icon iconNav(bool selected, String item) {
@@ -402,6 +402,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  //Home
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          //                    <--- top side
+                          color: (selectItemNav == 'Home')
+                              ? Colors.black
+                              : Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                    height: double.infinity,
+                    child: FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          selectItemNav = 'Home';
+                        });
+                      },
+                      child: Icon(Icons.home, color: primary, size: 35.0),
+                    ),
+                  ),
                   //Etablissement
                   Container(
                     decoration: BoxDecoration(
@@ -453,29 +476,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  //Home
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          //                    <--- top side
-                          color: (selectItemNav == 'Home')
-                              ? Colors.black
-                              : Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    height: double.infinity,
-                    child: FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          selectItemNav = 'Home';
-                        });
-                      },
-                      child: Icon(Icons.home, color: primary, size: 35.0),
-                    ),
-                  ),
+
                   //Contact
                   Container(
                     decoration: BoxDecoration(
@@ -503,31 +504,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     ),
                   ),
                   //Support
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          //                    <--- top side
-                          color: (selectItemNav == 'Support')
-                              ? Colors.black
-                              : Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    height: double.infinity,
-                    child: FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          selectItemNav = 'Support';
-                        });
-                      },
-                      child: Text(
-                        'Support',
-                        style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

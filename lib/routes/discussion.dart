@@ -9,6 +9,7 @@ import 'package:smart_select/smart_select.dart';
 import 'package:website_university/constantes/couleur.dart';
 import 'package:website_university/constantes/model.dart';
 import 'package:website_university/constantes/widget.dart';
+import 'package:website_university/services/service.dart';
 import 'package:website_university/services/variableStatic.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -25,12 +26,21 @@ class Discussion extends StatefulWidget {
 
 class _DiscussionState extends State<Discussion> {
   final firestoreinstance = FirebaseFirestore.instance;
-  String channel = 'Global';
+  String channel = '';
   List<Message> listMessage = [];
 
   bool errorSending = false;
+  getShare() async {
+    String channell = await sharedChannelGet();
+    print(channell);
+    setState(() {
+      channel = channell;
+    });
+  }
+
   @override
   void initState() {
+    getShare();
     timeago.setLocaleMessages('fr', timeago.FrMessages());
     //listMessage = listMessages;
     super.initState();
@@ -199,7 +209,7 @@ class _DiscussionState extends State<Discussion> {
           choiceItems: optionsChannel,
           onChange: (state) {
             setState(() => channel = state.value);
-            print('$channel  a ete selectionne');
+            sharedChannelSet(channel);
           }),
     );
   }
