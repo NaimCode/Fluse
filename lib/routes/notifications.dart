@@ -101,7 +101,6 @@ class _NotificationsState extends State<Notifications> {
           }
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: backColor,
               //check
               title: Tooltip(
                 message: 'Notifications',
@@ -112,7 +111,8 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
               centerTitle: true,
-              elevation: 0.0,
+              elevation: (Get.width >= 810) ? 0.0 : 5.0,
+              backgroundColor: (Get.width <= 810) ? Colors.white : backColor,
               leading: widget.isMobile
                   ? IconButton(
                       icon: Icon(
@@ -139,6 +139,14 @@ class _NotificationsState extends State<Notifications> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 20, color: primary.withOpacity(0.8)),
+                          ),
+                          Text(
+                            'Menu->Profil',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: primary,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),

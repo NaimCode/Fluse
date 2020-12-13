@@ -12,6 +12,7 @@ List<String> listMenu = [
   'Documents',
   'Home',
   'Contact',
+  'À propos de nous'
 ];
 
 ///////

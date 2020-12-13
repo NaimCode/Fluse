@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "hostingaaa",
+    "default": "testversion-60550",
     "y": "sitetesthosting",
     "hostingWeb": "websitetesthosting",
     "ss": "hostingaaa",
@@ -9,6 +9,8 @@
     "fdfd": "hostingaaa",
     "jj": "hosting-f8fee",
     "jjj": "hosting-f8fee",
-    "gg": "hostingaaa"
+    "gg": "hostingaaa",
+    "fff": "hostingaaa",
+    "kk": "testversion-60550"
   }
 }

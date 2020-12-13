@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:website_university/services/variableStatic.dart';
 
@@ -83,6 +84,7 @@ Future getAssets() async {
     profile = await getprofile();
     googleLogo = await getgoogle();
     facebookLogo = await getfacebook();
+
     return 'finish';
   } catch (e) {
     print(e);

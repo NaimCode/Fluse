@@ -8,6 +8,7 @@ import 'package:website_university/constantes/widget.dart';
 import 'package:website_university/main.dart';
 import 'package:website_university/routes/bottomNavigation.dart';
 import 'package:website_university/routes/discussion.dart';
+import 'package:website_university/routes/pages/about.dart';
 import 'package:website_university/routes/pages/accueil.dart';
 import 'package:website_university/routes/pages/ajoutEtablissement.dart';
 import 'package:website_university/routes/pages/ajoutdocument.dart';
@@ -15,7 +16,7 @@ import 'package:website_university/routes/pages/contact.dart';
 import 'package:website_university/routes/pages/documents.dart';
 import 'package:website_university/routes/pages/etablissements.dart';
 import 'package:website_university/routes/notifications.dart';
-import 'package:website_university/routes/pages/support.dart';
+
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:website_university/routes/profile.dart';
@@ -42,7 +43,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Utilisateur user;
 
   //Index pour le navBar
-  String selectItemNav = 'Etablissements';
+  String selectItemNav = 'À propos de nous';
 
   //Variable pour 'responsive'
   Icon iconNav(bool selected, String item) {
@@ -51,7 +52,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         return Icon(
           Icons.home_outlined,
           size: 30,
-          color: selected ? primary : primary.withOpacity(0.7),
+          color: selected ? Colors.white : primary,
         );
 
         break;
@@ -59,7 +60,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         return Icon(
           Icons.school_outlined,
           size: 30,
-          color: selected ? primary : primary.withOpacity(0.7),
+          color: selected ? Colors.white : primary,
         );
 
         break;
@@ -67,7 +68,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         return Icon(
           Icons.contact_mail_outlined,
           size: 30,
-          color: selected ? primary : primary.withOpacity(0.7),
+          color: selected ? Colors.white : primary,
+        );
+
+        break;
+      case 'À propos de nous':
+        return Icon(
+          Icons.info_outline,
+          size: 30,
+          color: selected ? Colors.white : primary,
         );
 
         break;
@@ -75,7 +84,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         return Icon(
           Icons.article_outlined,
           size: 30,
-          color: selected ? primary : primary.withOpacity(0.7),
+          color: selected ? Colors.white : primary,
         );
 
         break;
@@ -97,12 +106,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         return Contact();
 
         break;
-      case 'Support':
-        return Support();
 
-        break;
       case 'Documents':
         return Documents();
+
+        break;
+      case 'À propos de nous':
+        return About();
 
         break;
       case 'Profile':
@@ -313,6 +323,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           Navigator.pop(context);
                         },
                         child: Container(
+                          color: selectedItem ? primary : null,
                           alignment: Alignment.centerLeft,
                           width: double.infinity,
                           child: Padding(
@@ -331,8 +342,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       fontFamily: 'Tomorrow',
                                       fontSize: 16,
                                       color: selectedItem
-                                          ? primary
-                                          : primary.withOpacity(0.7)),
+                                          ? Colors.white
+                                          : primary),
                                 )
                               ],
                             ),
@@ -402,29 +413,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  //Home
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          //                    <--- top side
-                          color: (selectItemNav == 'Home')
-                              ? Colors.black
-                              : Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    height: double.infinity,
-                    child: FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          selectItemNav = 'Home';
-                        });
-                      },
-                      child: Icon(Icons.home, color: primary, size: 35.0),
-                    ),
-                  ),
                   //Etablissement
                   Container(
                     decoration: BoxDecoration(
@@ -446,7 +434,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       },
                       child: Text(
                         'Etablissements',
-                        style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0),
+                        style:
+                            TextStyle(fontFamily: 'Tomorrow', fontSize: 17.0),
                       ),
                     ),
                   ),
@@ -472,11 +461,34 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       },
                       child: Text(
                         'Documents',
-                        style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0),
+                        style:
+                            TextStyle(fontFamily: 'Tomorrow', fontSize: 17.0),
                       ),
                     ),
                   ),
-
+//Home
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          //                    <--- top side
+                          color: (selectItemNav == 'Home')
+                              ? Colors.black
+                              : Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                    height: double.infinity,
+                    child: FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          selectItemNav = 'Home';
+                        });
+                      },
+                      child: Icon(Icons.home, color: primary, size: 35.0),
+                    ),
+                  ),
                   //Contact
                   Container(
                     decoration: BoxDecoration(
@@ -499,15 +511,44 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       },
                       child: Text(
                         'Contact',
-                        style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0),
+                        style:
+                            TextStyle(fontFamily: 'Tomorrow', fontSize: 17.0),
                       ),
                     ),
                   ),
                   //Support
+                  //about
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          //                    <--- top side
+                          color: (selectItemNav == 'À propos de nous')
+                              ? Colors.black
+                              : Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                    height: double.infinity,
+                    child: FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          selectItemNav = 'À propos de nous';
+                        });
+                      },
+                      child: Text(
+                        'À propos de nous',
+                        style:
+                            TextStyle(fontFamily: 'Tomorrow', fontSize: 17.0),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
+
           //profile
           Expanded(
             flex: 1,
@@ -523,9 +564,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Text(
                     user.nom,
                     style: TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.purple[900],
-                    ),
+                        fontFamily: 'Poppins',
+                        color: Colors.purple[900],
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               )),
@@ -566,7 +607,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               child: (selectItemNav != 'Home')
                   ? Text(
                       selectItemNav,
-                      style: TextStyle(fontFamily: 'Ubuntu', fontSize: 20.0),
+                      style: TextStyle(fontFamily: 'Tomorrow', fontSize: 20.0),
                     )
                   : Icon(Icons.home, color: primary, size: 35.0),
             ),

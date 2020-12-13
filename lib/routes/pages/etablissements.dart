@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/linecons_icons.dart';
+
 import 'package:get/get.dart';
 
 import 'package:website_university/constantes/couleur.dart';
@@ -8,8 +8,6 @@ import 'package:website_university/constantes/model.dart';
 import 'package:website_university/constantes/widget.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:fluttericon/maki_icons.dart';
 
 class Etablissements extends StatefulWidget {
   @override
@@ -22,7 +20,7 @@ class _EtablissementsState extends State<Etablissements> {
   List listInitial = [];
   /////future
   var future;
-
+  double ele = 0.0;
   @override
   void initState() {
     future = getEtablissement();

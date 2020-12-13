@@ -122,72 +122,77 @@ class _DiscussionState extends State<Discussion> {
                 Expanded(
                   child: Container(
                     // height: Get.width - 500,
-                    child: StreamBuilder(
-                        stream: firestoreinstance
-                            .collection('Discussion')
-                            .doc(channel)
-                            .collection('Message')
-                            .orderBy('date', descending: true)
-                            .snapshots(),
-                        builder: (context, snapMess) {
-                          // if (snapMess.connectionState ==
-                          //     ConnectionState.waiting)
-                          //   return SpinKitThreeBounce(
-                          //     color: primary,
-                          //     size: 20,
-                          //   );
-                          if (snapMess.connectionState == ConnectionState.none)
-                            return Center(
-                              child: Text('Pas de connexion'),
-                            );
-                          if (snapMess.hasError) print('erreur');
-                          if (!snapMess.hasData) {
-                            print(snapMess.data);
-                            print('pas de message');
-                            return Center(
-                              child: Text('Aucun message'),
-                            );
-                          } else {
-                            print('debut message');
-                            listMessage.clear();
-                            snapMess.data.docs.forEach((element) {
-                              listMessage.add(Message(
-                                  date: element.data()['date'],
-                                  userID: element.data()['userID'],
-                                  message: element.data()['message']));
-                            });
-                            return Scrollbar(
-                              child: ListView.builder(
-                                reverse: true,
-                                itemCount: listMessage.length,
-                                itemBuilder: (context, index) {
-                                  bool isUser = (listMessage[index].userID ==
-                                      widget.user.uid);
+                    child: (channel.isEmpty)
+                        ? chargement()
+                        : StreamBuilder(
+                            stream: firestoreinstance
+                                .collection('Discussion')
+                                .doc(channel)
+                                .collection('Message')
+                                .orderBy('date', descending: true)
+                                .snapshots(),
+                            builder: (context, snapMess) {
+                              if (snapMess.connectionState ==
+                                  ConnectionState.waiting)
+                                return SpinKitThreeBounce(
+                                  color: primary,
+                                  size: 20,
+                                );
+                              if (snapMess.connectionState ==
+                                  ConnectionState.none)
+                                return Center(
+                                  child: Text('Pas de connexion'),
+                                );
+                              if (snapMess.hasError) print('erreur');
+                              if (!snapMess.hasData) {
+                                print(snapMess.data);
+                                print('pas de message');
+                                return Center(
+                                  child: Text('Aucun message'),
+                                );
+                              } else {
+                                print('debut message');
+                                listMessage.clear();
+                                snapMess.data.docs.forEach((element) {
+                                  listMessage.add(Message(
+                                      date: element.data()['date'],
+                                      userID: element.data()['userID'],
+                                      message: element.data()['message']));
+                                });
+                                return Scrollbar(
+                                  child: ListView.builder(
+                                    reverse: true,
+                                    itemCount: listMessage.length,
+                                    itemBuilder: (context, index) {
+                                      bool isUser =
+                                          (listMessage[index].userID ==
+                                              widget.user.uid);
 
-                                  return ListTile(
-                                    subtitle: MessageSection(
-                                        isUser: isUser,
-                                        listMessage: listMessage,
-                                        index: index,
-                                        channel: channel),
-                                    title: (index == listMessage.length - 1)
-                                        ? UserSection(
-                                            listMessage: listMessage,
+                                      return ListTile(
+                                        subtitle: MessageSection(
                                             isUser: isUser,
-                                            index: index)
-                                        : (listMessage[index].userID ==
-                                                listMessage[index + 1].userID)
-                                            ? Container()
-                                            : UserSection(
+                                            listMessage: listMessage,
+                                            index: index,
+                                            channel: channel),
+                                        title: (index == listMessage.length - 1)
+                                            ? UserSection(
                                                 listMessage: listMessage,
                                                 isUser: isUser,
-                                                index: index),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        }),
+                                                index: index)
+                                            : (listMessage[index].userID ==
+                                                    listMessage[index + 1]
+                                                        .userID)
+                                                ? Container()
+                                                : UserSection(
+                                                    listMessage: listMessage,
+                                                    isUser: isUser,
+                                                    index: index),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            }),
                   ),
                 ),
                 inputMessage()

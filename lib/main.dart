@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
                 context.read<Authentification>().authStateChanges),
       ],
       child: GetMaterialApp(
-        title: 'Ibn Tofail',
+        title: 'Fluse',
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
@@ -64,6 +64,7 @@ class FluseWebsite extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.none) {
           return erreurChargement('Erreur de connexion');
         }
+        print(currentVersion);
         return StreamBuilder<User>(
             stream: firebaseUser.authStateChanges,
             builder: (context, snapshot) {

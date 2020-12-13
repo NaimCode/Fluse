@@ -8,3 +8,5 @@ var right2;
 var profile;
 var facebookLogo;
 var googleLogo;
+var placeholderE = 'placeholderEtablissment.png';
+var currentVersion = '1.0.0';

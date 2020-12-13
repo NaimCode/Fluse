@@ -87,6 +87,46 @@ final snackBarDocumentEchec = SnackBar(
   ],
 ));
 
+//version
+class Update extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 500,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Nouvelle version disponible !',
+                    style: TextStyle(
+                        color: Colors.amber[900],
+                        fontSize: (Get.width <= 500) ? 18 : 26,
+                        fontFamily: 'Tomorrow'),
+                  ),
+                  Text(currentVersion, style: TextStyle(fontSize: 30)),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Vous pouvez faire avoir la nouvelle version simplement en supprimant l\'historique de votre navigateur (Chrome,Safari,etc)',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        letterSpacing: 2,
+                        fontSize: (Get.width <= 500) ? 15 : 18),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+}
+
 ////Discussion
 class UserSection extends StatelessWidget {
   const UserSection(
