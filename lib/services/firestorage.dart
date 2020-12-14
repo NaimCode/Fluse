@@ -72,6 +72,41 @@ getgoogle() async {
   return url;
 }
 
+getHome() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/home.jpg");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+geteta() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/etablissement");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getdoc() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/document.png");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getabo() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/about.png");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
+getcon() async {
+  var ref = FirebaseStorage.instance.ref().child("Assets/contact.png");
+  String url = (await ref.getDownloadURL()).toString();
+
+  return url;
+}
+
 Future getAssets() async {
   try {
     logo = await getLogo();

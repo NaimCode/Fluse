@@ -43,7 +43,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Utilisateur user;
 
   //Index pour le navBar
-  String selectItemNav = 'À propos de nous';
+  String selectItemNav = 'Home';
 
   //Variable pour 'responsive'
   Icon iconNav(bool selected, String item) {

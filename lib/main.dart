@@ -19,6 +19,7 @@ import 'package:timeago/timeago.dart';
 import 'constantes/widget.dart';
 
 void main() async {
+  //await Authentification(FirebaseAuth.instance).deconnection();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

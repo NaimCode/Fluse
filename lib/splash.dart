@@ -9,6 +9,7 @@ import 'package:website_university/services/authentification.dart';
 import 'package:website_university/services/variableStatic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -190,11 +191,123 @@ class _SplashState extends State<Splash> {
                 Expanded(
                   flex: 4,
                   child: SingleChildScrollView(
-                    child: (selectItemNav == 'se connecter')
-                        ? connexion()
-                        : enregistrement(),
-                  ),
+                      child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //logo
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(38.0),
+                            child: Image.network(
+                              logo,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 32),
+                          width: (MediaQuery.of(context).size.width <= 340)
+                              ? 240
+                              : 290.0,
+                          decoration: BoxDecoration(
+                            color: Color(0xff1976d2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: InkWell(
+                            onTap: () async {
+                              await context
+                                  .read<Authentification>()
+                                  .signInWithFacebook();
+                            },
+                            child: Row(
+                              children: [
+                                SizedBox(height: 20),
+                                Image.network(
+                                  facebookLogo,
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      'Continuer avec Facebook',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontFamily: 'Ubuntu'),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 32),
+                          width: (MediaQuery.of(context).size.width <= 340)
+                              ? 240
+                              : 290.0,
+                          decoration: BoxDecoration(
+                            color: Color(0xffea4335),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: InkWell(
+                            onTap: () async {
+                              await context
+                                  .read<Authentification>()
+                                  .signInWithGoogle();
+                            },
+                            child: Row(
+                              children: [
+                                SizedBox(height: 20),
+                                Image.network(
+                                  googleLogo,
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      'Continuer avec Google',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontFamily: 'Ubuntu'),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        //Connextion-Enregistrement
+                        selectButton(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        //body
+
+                        (selectItemNav == 'se connecter')
+                            ? connectionSection()
+                            : enregistrementSection(),
+                      ],
+                    ),
+                  )
+                      //  (selectItemNav == 'se connecter')
+                      //     ? connexion()
+                      //     : enregistrement(),
+                      ),
                 ),
+
                 //Right
                 (MediaQuery.of(context).size.width >= 840)
                     ? Expanded(
@@ -218,289 +331,253 @@ class _SplashState extends State<Splash> {
     );
   }
 
-  Container enregistrement() {
+  Container enregistrementSection() {
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          //logo
           Container(
-            child: Padding(
-              padding: const EdgeInsets.all(38.0),
-              child: Image.network(logo),
-            ),
-          ),
-          //Connextion-Enregistrement
-          selectButton(),
-          SizedBox(
-            height: 20,
-          ),
-          //body
-          Container(
-            child: Column(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Container(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.person_sharp, color: primary),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            //                    <--- top side
-                            color: erreurNomE ? Colors.red : backColor,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: (MediaQuery.of(context).size.width <= 340)
-                            ? 240
-                            : 290.0,
-                        child: TextFormField(
-                          controller: nomE,
-                          decoration: new InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: 'Nom'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15.0,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.person_sharp, color: primary),
                 ),
                 Container(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.mail, color: primary),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            //                    <--- top side
-                            color: erreurMailE ? Colors.red : backColor,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: (MediaQuery.of(context).size.width <= 340)
-                            ? 240
-                            : 290.0,
-                        child: TextFormField(
-                          controller: mailE,
-                          decoration: new InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: 'Email'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                Container(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.lock, color: primary),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            //                    <--- top side
-                            color: erreurPasswordE ? Colors.red : backColor,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: (MediaQuery.of(context).size.width <= 340)
-                            ? 240
-                            : 290.0,
-                        child: Stack(
-                          alignment: Alignment.centerRight,
-                          children: [
-                            TextFormField(
-                              controller: passwordE,
-                              obscureText: obscure ? true : false,
-                              decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(
-                                      left: 15, bottom: 11, top: 11, right: 15),
-                                  hintText: 'Mot de passe'),
-                            ),
-                            IconButton(
-                              alignment: Alignment.centerRight,
-                              onPressed: () {
-                                setState(() {
-                                  obscure = !obscure;
-                                });
-                              },
-                              icon: obscure
-                                  ? Icon(
-                                      Icons.visibility,
-                                      size: 20,
-                                    )
-                                  : Icon(Icons.visibility_off, size: 20),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Ou s\'enregistrer avec :',
-                      style: TextStyle(fontFamily: 'Didac'),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      //                    <--- top side
+                      color: erreurNomE ? Colors.red : backColor,
+                      width: 2.0,
                     ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width:
+                      (MediaQuery.of(context).size.width <= 340) ? 240 : 290.0,
+                  child: TextFormField(
+                    controller: nomE,
+                    decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.only(
+                            left: 15, bottom: 11, top: 11, right: 15),
+                        hintText: 'Nom'),
                   ),
                 ),
-                Container(
-                  child: Wrap(
-                    // alignment: WrapAlignment.spaceAround,
-                    children: [
-                      Tooltip(
-                        message: 'Facebook',
-                        child: FlatButton(
-                          child: Image.network(
-                            facebookLogo,
-                            height: 40,
-                            width: 40,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30.0,
-                      ),
-                      Tooltip(
-                        message: 'Google',
-                        child: FlatButton(
-                          child: Image.network(
-                            googleLogo,
-                            height: 40,
-                            width: 40,
-                          ),
-                          onPressed: () {},
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                        'Si vous avez déjà un compte, veuillez-vous connecter',
-                        style: TextStyle(fontFamily: 'Didac', fontSize: 12)),
-                  ),
-                ),
-                isCharging
-                    ? chargement()
-                    : Container(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: Tooltip(
-                          message: 'Valider',
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            color: primary,
-                            onPressed: enregistrementVerif,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 3.0, horizontal: 30.0),
-                              child: Icon(
-                                Icons.navigate_next,
-                                color: Colors.white,
-                                size: 35,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
               ],
             ),
-          )
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Container(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.mail, color: primary),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      //                    <--- top side
+                      color: erreurMailE ? Colors.red : backColor,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width:
+                      (MediaQuery.of(context).size.width <= 340) ? 240 : 290.0,
+                  child: TextFormField(
+                    controller: mailE,
+                    decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.only(
+                            left: 15, bottom: 11, top: 11, right: 15),
+                        hintText: 'Email'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Container(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.lock, color: primary),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      //                    <--- top side
+                      color: erreurPasswordE ? Colors.red : backColor,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width:
+                      (MediaQuery.of(context).size.width <= 340) ? 240 : 290.0,
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      TextFormField(
+                        controller: passwordE,
+                        obscureText: obscure ? true : false,
+                        decoration: new InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.only(
+                                left: 15, bottom: 11, top: 11, right: 15),
+                            hintText: 'Mot de passe'),
+                      ),
+                      IconButton(
+                        alignment: Alignment.centerRight,
+                        onPressed: () {
+                          setState(() {
+                            obscure = !obscure;
+                          });
+                        },
+                        icon: obscure
+                            ? Icon(
+                                Icons.visibility,
+                                size: 20,
+                              )
+                            : Icon(Icons.visibility_off, size: 20),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                  'Si vous avez déjà un compte, veuillez-vous connecter',
+                  style: TextStyle(fontFamily: 'Didac', fontSize: 12)),
+            ),
+          ),
+          isCharging
+              ? chargement()
+              : Container(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Tooltip(
+                    message: 'Valider',
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      color: primary,
+                      onPressed: enregistrementVerif,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 30.0),
+                        child: Icon(
+                          Icons.navigate_next,
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
         ],
       ),
     );
   }
 
-  Container connexion() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //logo
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.all(38.0),
-              child: Image.network(logo),
-            ),
-          ),
-          //Connextion-Enregistrement
-          selectButton(),
-          SizedBox(
-            height: 20,
-          ),
-          //body
-          Container(
-            child: Column(
-              children: [
-                Container(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.mail, color: primary),
+  Center connectionSection() {
+    return Center(
+      child: Container(
+        child: Column(
+          children: [
+            Container(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.mail, color: primary),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        //                    <--- top side
+                        color: erreurMail ? Colors.red : backColor,
+                        width: 2.0,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            //                    <--- top side
-                            color: erreurMail ? Colors.red : backColor,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: (MediaQuery.of(context).size.width <= 340)
-                            ? 240
-                            : 290.0,
-                        child: TextFormField(
-                          controller: mail,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    width: (MediaQuery.of(context).size.width <= 340)
+                        ? 240
+                        : 290.0,
+                    child: TextFormField(
+                      controller: mail,
+                      decoration: new InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.only(
+                              left: 15, bottom: 5, top: 5, right: 15),
+                          hintText: 'Email'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            Container(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.lock, color: primary),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        //                    <--- top side
+                        color: erreurPassword ? Colors.red : backColor,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    width: (MediaQuery.of(context).size.width <= 340)
+                        ? 240.0
+                        : 290.0,
+                    child: Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        TextFormField(
+                          controller: password,
+                          obscureText: obscure ? true : false,
                           decoration: new InputDecoration(
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -509,151 +586,64 @@ class _SplashState extends State<Splash> {
                               disabledBorder: InputBorder.none,
                               contentPadding: EdgeInsets.only(
                                   left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: 'Email'),
+                              hintText: 'Mot de passe'),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                Container(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.lock, color: primary),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            //                    <--- top side
-                            color: erreurPassword ? Colors.red : backColor,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: (MediaQuery.of(context).size.width <= 340)
-                            ? 240.0
-                            : 290.0,
-                        child: Stack(
+                        IconButton(
                           alignment: Alignment.centerRight,
-                          children: [
-                            TextFormField(
-                              controller: password,
-                              obscureText: obscure ? true : false,
-                              decoration: new InputDecoration(
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(
-                                      left: 15, bottom: 11, top: 11, right: 15),
-                                  hintText: 'Mot de passe'),
-                            ),
-                            IconButton(
-                              alignment: Alignment.centerRight,
-                              onPressed: () {
-                                setState(() {
-                                  obscure = !obscure;
-                                });
-                              },
-                              icon: obscure
-                                  ? Icon(
-                                      Icons.visibility,
-                                      size: 20,
-                                    )
-                                  : Icon(Icons.visibility_off, size: 20),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Ou se connecter avec :',
-                      style: TextStyle(fontFamily: 'Didac'),
+                          onPressed: () {
+                            setState(() {
+                              obscure = !obscure;
+                            });
+                          },
+                          icon: obscure
+                              ? Icon(
+                                  Icons.visibility,
+                                  size: 20,
+                                )
+                              : Icon(Icons.visibility_off, size: 20),
+                        )
+                      ],
                     ),
                   ),
-                ),
-                Container(
-                  child: Wrap(
-                    // alignment: WrapAlignment.spaceAround,
-                    children: [
-                      Tooltip(
-                        message: 'Facebook',
-                        child: FlatButton(
-                          child: Image.asset(
-                            'facebook.png',
-                            height: 40,
-                            width: 40,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30.0,
-                      ),
-                      Tooltip(
-                        message: 'Google',
-                        child: FlatButton(
-                          child: Image.asset(
-                            'google.png',
-                            height: 40,
-                            width: 40,
-                          ),
-                          onPressed: () {},
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Si vous n\'avez pas encore un compte, veuillez-vous enregistrer',
-                      style: TextStyle(fontFamily: 'Didac', fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                isCharging
-                    ? chargement()
-                    : Container(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: Tooltip(
-                          message: 'Valider',
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            color: primary,
-                            onPressed: connexionVerif,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 3.0, horizontal: 30.0),
-                              child: Icon(
-                                Icons.navigate_next,
-                                color: Colors.white,
-                                size: 35,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-              ],
+                ],
+              ),
             ),
-          )
-        ],
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Si vous n\'avez pas encore un compte, veuillez-vous enregistrer',
+                  style: TextStyle(fontFamily: 'Didac', fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            isCharging
+                ? chargement()
+                : Container(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Tooltip(
+                      message: 'Valider',
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        color: primary,
+                        onPressed: connexionVerif,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 3.0, horizontal: 30.0),
+                          child: Icon(
+                            Icons.navigate_next,
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+          ],
+        ),
       ),
     );
   }

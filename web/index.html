@@ -21,10 +21,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Fluse">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" href="logo.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="logo.jpg"/>
 
   <title>Fluse</title>
   <link rel="manifest" href="manifest.json">
@@ -68,6 +68,46 @@
   firebase.analytics();
 </script>
   <script src="main.dart.js" type="application/javascript"></script>
+   
+  <!-- <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1007339996425098',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v9.0'
+      });
+        
+      FB.AppEvents.logPageView();   
+        
+    };
   
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script> -->
+   
+<!--Facebook SDK config -->
+<!-- <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '1007339996425098',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v7.0'
+    });
+  };
+</script> -->
+
+<!-- Facebook JS CDN SDK --> 
+<!-- <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script> -->
+
+
+<!-- <script src="https://flutterfacebooklogin.s3.us-east-2.amazonaws.com/web_interop.js"></script>  -->
+ 
 </body>
 </html>

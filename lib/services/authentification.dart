@@ -1,7 +1,15 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:http/http.dart' as http;
+import 'package:website_university/services/variableStatic.dart';
+//import 'package:flutter_facebook_login_web/flutter_facebook_login_web.dart';
+
 final firestoreinstance = FirebaseFirestore.instance;
+
+//final facebookSignIn = FacebookLoginWeb();
 
 class Authentification {
   FirebaseAuth _firebaseAuth;
@@ -9,6 +17,83 @@ class Authentification {
   Authentification(this._firebaseAuth);
   deconnection() async {
     await _firebaseAuth.signOut();
+  }
+
+  signInWithGoogle() async {
+    // Create a new provider
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+    googleProvider
+        .addScope('https://www.googleapis.com/auth/contacts.readonly');
+    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+
+    // Once signed in, return the UserCredential
+    var user = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+    print(user.user.displayName);
+    // Or use signInWithRedirect
+    // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+  }
+
+  signInWithFacebook() async {
+    //final FacebookLoginResult result =
+    //   await facebookSignIn.logIn(['email', 'public_profile']);
+
+    FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+
+    facebookProvider.addScope('email');
+
+    facebookProvider.setCustomParameters({
+      'display': 'popup',
+    });
+
+    // Once signed in, return the UserCredential
+    FirebaseAuth.instance.signInWithPopup(facebookProvider).then((value) {
+      var user = value.user;
+      print(user.displayName);
+      FirebaseFirestore.instance
+          .collection('Utilisateur')
+          .doc(user.uid)
+          .get()
+          .then((value) async {
+        if (!value.exists) {
+          print('enregistrement');
+
+          var utilisateurs = {
+            'nom': user.displayName,
+            'email': user.email,
+            'password': null,
+            'image': profile,
+            'universite': null,
+            'semestre': null,
+            'filiere': null,
+            'admin': false,
+            'uid': user.uid,
+          };
+
+          await firestoreinstance
+              .collection('Utilisateur')
+              .doc(user.uid)
+              .set(utilisateurs);
+        }
+      });
+    });
+
+    // switch (result.status) {
+    //   case FacebookLoginStatus.loggedIn:
+    //     final FacebookAccessToken accessToken = result.accessToken;
+
+    //     print('$accessToken');
+    //     print(result.accessToken.userId);
+
+    //     facebookSignIn.testApi();
+    //     break;
+    //   case FacebookLoginStatus.cancelledByUser:
+    //     print('annuler');
+    //     break;
+    //   case FacebookLoginStatus.error:
+    //     print('erreur');
+    //     break;
+    // }
   }
 
   enregistrementAuth(String mail, String password, String nom) async {
