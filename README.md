@@ -2,7 +2,7 @@
 
 # Desktop
 <img src="1w.jpeg"/>
-<img src="2w.jpeg"/>
+<img src="2w.jpg"/>
 
 # Mobile
 <img src="1m.jpeg"/>
